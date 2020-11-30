@@ -1,0 +1,10 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+.vscode/*
+
+# Other
+.ok_history
+.ok_storage.db
+ok
+proj01.ok
