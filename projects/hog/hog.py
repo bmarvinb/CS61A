@@ -42,7 +42,12 @@ def free_bacon(score):
 
     # Trim pi to only (score + 1) digit(s)
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    # The // performs integer division by a power of ten to move the digit to the ones position,
+    # then the % gets the remainder after division by 10.
+    # Note that the numbering in this scheme uses zero-indexing and starts from the right side of the number.
+    def get_nth_digit(number, n):
+        return number // 10 ** (100 - n) % 10
+    pi = get_nth_digit(pi, score)
     # END PROBLEM 2
 
     return pi % 10 + 3
