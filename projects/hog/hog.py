@@ -140,8 +140,7 @@ def silence(score0, score1):
     return silence
 
 
-def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
-         goal=GOAL_SCORE, say=silence):
+def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided, goal=GOAL_SCORE, say=silence):
     """Simulate a game and return the final scores of both players, with Player
     0's score first, and Player 1's score second.
 
@@ -159,7 +158,25 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+
+    def calculate_score(strategy, player_score, opponent_score, goal, dice):
+        player_score += take_turn(strategy(player_score,
+                                           opponent_score), opponent_score, dice)
+
+        while (player_score < goal and extra_turn(player_score, opponent_score)):
+            player_score += take_turn(strategy(player_score,
+                                               opponent_score), opponent_score, dice)
+
+        return player_score
+
+    # While the player score or opponent score is lower that goal repeat
+    while (not(score0 >= goal or score1 >= goal)):
+        if (who == 0):
+            score0 = calculate_score(strategy0, score0, score1, goal, dice)
+        else:
+            score1 = calculate_score(strategy1, score1, score0, goal, dice)
+        who = other(who)
+
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
@@ -394,3 +411,17 @@ def run(*args):
 
     if args.run_experiments:
         run_experiments()
+
+
+# always_one = make_test_dice(1)
+# always_two = make_test_dice(2)
+# always_three = make_test_dice(3)
+# always = always_roll
+
+# s0, s1 = play(always(1), always(1), goal=25,
+#               dice=make_test_dice(5, 10, 3, 1, 11, 6))
+
+always_three = make_test_dice(3)
+always = always_roll
+# Extra turn from swine align
+s0, s1 = play(always(5), always(5), goal=25, dice=always_three)
