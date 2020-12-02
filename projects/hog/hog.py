@@ -89,7 +89,16 @@ def swine_align(player_score, opponent_score):
     False
     """
     # BEGIN PROBLEM 4a
-    "*** YOUR CODE HERE ***"
+    def compute_gcd(x, y):
+        if x == 0:
+            return y
+
+        return compute_gcd(y % x, x)
+
+    if (not player_score or not opponent_score):
+        return False
+
+    return True if compute_gcd(player_score, opponent_score) >= 10 else False
     # END PROBLEM 4a
 
 
