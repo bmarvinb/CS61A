@@ -21,7 +21,6 @@ def roll_dice(num_rolls, dice=six_sided):
     # These assert statements ensure that num_rolls is a positive integer.
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
-    # BEGIN PROBLEM 1
     sum = 0
     pig_out = False
     for i in range(num_rolls):
@@ -29,7 +28,6 @@ def roll_dice(num_rolls, dice=six_sided):
         pig_out = pig_out or result == 1
         sum = 1 if pig_out else sum + result
     return sum
-    # END PROBLEM 1
 
 
 def free_bacon(score):
@@ -41,14 +39,12 @@ def free_bacon(score):
     pi = FIRST_101_DIGITS_OF_PI
 
     # Trim pi to only (score + 1) digit(s)
-    # BEGIN PROBLEM 2
     # The // performs integer division by a power of ten to move the digit to the ones position,
     # then the % gets the remainder after division by 10.
     # Note that the numbering in this scheme uses zero-indexing and starts from the right side of the number.
     def get_nth_digit(number, n):
         return number // 10 ** (100 - n) % 10
     pi = get_nth_digit(pi, score)
-    # END PROBLEM 2
 
     return pi % 10 + 3
 
@@ -66,9 +62,8 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls >= 0, 'Cannot roll a negative number of dice in take_turn.'
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
-    # BEGIN PROBLEM 3
+
     return free_bacon(opponent_score) if num_rolls == 0 else roll_dice(num_rolls, dice)
-    # END PROBLEM 3
 
 
 def extra_turn(player_score, opponent_score):
@@ -88,7 +83,6 @@ def swine_align(player_score, opponent_score):
     >>> swine_align(35, 45)  # The GCD is 5.
     False
     """
-    # BEGIN PROBLEM 4a
     def compute_gcd(x, y):
         if x == 0:
             return y
@@ -99,7 +93,6 @@ def swine_align(player_score, opponent_score):
         return False
 
     return True if compute_gcd(player_score, opponent_score) >= 10 else False
-    # END PROBLEM 4a
 
 
 def pig_pass(player_score, opponent_score):
@@ -119,9 +112,8 @@ def pig_pass(player_score, opponent_score):
     >>> pig_pass(13, 12)
     False
     """
-    # BEGIN PROBLEM 4b
+
     return True if opponent_score > player_score and opponent_score - player_score < 3 else False
-    # END PROBLEM 4b
 
 
 def other(who):
@@ -157,7 +149,6 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided, goal=GOAL_SCO
     say:        The commentary function to call at the end of the first turn.
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
-    # BEGIN PROBLEM 5
 
     def calculate_score(strategy, player_score, opponent_score, goal, dice):
         player_score += take_turn(strategy(player_score,
@@ -170,20 +161,15 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided, goal=GOAL_SCO
         return player_score
 
     # While the player score or opponent score is lower that goal repeat
-    while (not(score0 >= goal or score1 >= goal)):
+    while (score0 < goal and score1 < goal):
         if (who == 0):
             score0 = calculate_score(strategy0, score0, score1, goal, dice)
         else:
             score1 = calculate_score(strategy1, score1, score0, goal, dice)
         who = other(who)
+        say = say(score0, score1)
 
-    # END PROBLEM 5
-    # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
-    # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 6
     return score0, score1
-
 
 #######################
 # Phase 2: Commentary #
@@ -413,15 +399,15 @@ def run(*args):
         run_experiments()
 
 
-# always_one = make_test_dice(1)
-# always_two = make_test_dice(2)
-# always_three = make_test_dice(3)
-# always = always_roll
+def total(s0, s1):
+    print(s0 + s1)
+    return echo
 
-# s0, s1 = play(always(1), always(1), goal=25,
-#               dice=make_test_dice(5, 10, 3, 1, 11, 6))
 
-always_three = make_test_dice(3)
-always = always_roll
-# Extra turn from swine align
-s0, s1 = play(always(5), always(5), goal=25, dice=always_three)
+def echo(s0, s1):
+    print(s0, s1)
+    return total
+
+
+s0, s1 = play(always_roll(1), always_roll(
+    1), dice=make_test_dice(2, 5), goal=10, say=echo)
