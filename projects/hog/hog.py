@@ -246,19 +246,15 @@ def announce_highest(who, last_score=0, running_high=0):
     30 point(s)! The most yet for Player 1
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
-# Error: expected
-#     5 point(s)! The most yet for Player 0
-#     3 point(s)! The most yet for Player 1
-#     5 point(s)! The most yet for Player 1
 
     def say(score0, score1):
-        current_score = score1 if who else score0
-        curr_point = current_score - running_high
-        if curr_point > last_score:
-            print(curr_point, 'point(s)! The most yet for Player', who)
-            return announce_highest(who, curr_point, current_score)
+        score = score1 if who else score0
+        current_score = score - running_high
+        if current_score > last_score:
+            print(current_score, 'point(s)! The most yet for Player', who)
+            return announce_highest(who, current_score, score)
         else:
-            return announce_highest(who, last_score, current_score)
+            return announce_highest(who, last_score, score)
     return say
 
 #######################
@@ -404,8 +400,3 @@ def run(*args):
 
     if args.run_experiments:
         run_experiments()
-
-
-announce_both = both(announce_highest(0), announce_highest(1))
-s0, s1 = play(always_roll(1), always_roll(
-    1), dice=make_test_dice(5, 3, 5), goal=10, say=announce_both)
