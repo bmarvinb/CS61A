@@ -132,6 +132,13 @@ def silence(score0, score1):
     return silence
 
 
+def calculate_score(strategy, p_score, o_score, goal, dice):
+    p_score += take_turn(strategy(p_score, o_score), o_score, dice)
+    while (p_score < goal and extra_turn(p_score, o_score)):
+        p_score += take_turn(strategy(p_score, o_score), o_score, dice)
+    return p_score
+
+
 def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided, goal=GOAL_SCORE, say=silence):
     """Simulate a game and return the final scores of both players, with Player
     0's score first, and Player 1's score second.
@@ -149,16 +156,6 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided, goal=GOAL_SCO
     say:        The commentary function to call at the end of the first turn.
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
-
-    def calculate_score(strategy, player_score, opponent_score, goal, dice):
-        player_score += take_turn(strategy(player_score,
-                                           opponent_score), opponent_score, dice)
-
-        while (player_score < goal and extra_turn(player_score, opponent_score)):
-            player_score += take_turn(strategy(player_score,
-                                               opponent_score), opponent_score, dice)
-
-        return player_score
 
     # While the player score or opponent score is lower that goal repeat
     while (score0 < goal and score1 < goal):
@@ -249,10 +246,20 @@ def announce_highest(who, last_score=0, running_high=0):
     30 point(s)! The most yet for Player 1
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
-    # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 7
+# Error: expected
+#     5 point(s)! The most yet for Player 0
+#     3 point(s)! The most yet for Player 1
+#     5 point(s)! The most yet for Player 1
 
+    def say(score0, score1):
+        current_score = score1 if who else score0
+        curr_point = current_score - running_high
+        if curr_point > last_score:
+            print(curr_point, 'point(s)! The most yet for Player', who)
+            return announce_highest(who, curr_point, current_score)
+        else:
+            return announce_highest(who, last_score, current_score)
+    return say
 
 #######################
 # Phase 3: Strategies #
@@ -399,15 +406,6 @@ def run(*args):
         run_experiments()
 
 
-def total(s0, s1):
-    print(s0 + s1)
-    return echo
-
-
-def echo(s0, s1):
-    print(s0, s1)
-    return total
-
-
+announce_both = both(announce_highest(0), announce_highest(1))
 s0, s1 = play(always_roll(1), always_roll(
-    1), dice=make_test_dice(2, 5), goal=10, say=echo)
+    1), dice=make_test_dice(5, 3, 5), goal=10, say=announce_both)
