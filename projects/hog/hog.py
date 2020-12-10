@@ -292,9 +292,13 @@ def make_averaged(original_function, trials_count=1000):
     >>> averaged_dice()
     3.0
     """
-    # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 8
+    def new_func(*args):
+        result = 0
+        for i in range(trials_count):
+            result += original_function(*args)
+        average = result / trials_count
+        return average
+    return new_func
 
 
 def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
@@ -400,3 +404,11 @@ def run(*args):
 
     if args.run_experiments:
         run_experiments()
+
+
+dice = make_test_dice(3, 1, 5, 6)
+averaged_roll_dice = make_averaged(roll_dice, 1000)
+# Average of calling roll_dice 1000 times
+# Enter a float (e.g. 1.0) instead of an integer
+average = averaged_roll_dice(2, dice)
+print(average)
