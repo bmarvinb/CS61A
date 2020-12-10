@@ -365,9 +365,7 @@ def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     """This strategy rolls 0 dice if that gives at least CUTOFF points, and
     rolls NUM_ROLLS otherwise.
     """
-    # BEGIN PROBLEM 10
-    return 6  # Replace this statement
-    # END PROBLEM 10
+    return 0 if max(score, opponent_score) - min(score, opponent_score) <= cutoff else num_rolls
 
 
 def extra_turn_strategy(score, opponent_score, cutoff=8, num_rolls=6):
@@ -409,3 +407,11 @@ def run(*args):
 
     if args.run_experiments:
         run_experiments()
+
+
+bacon_strategy(32, 0, cutoff=8, num_rolls=4)
+
+# Error: expected
+#     4
+# but got
+#     0
