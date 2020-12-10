@@ -310,9 +310,14 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     >>> max_scoring_num_rolls(dice)
     1
     """
-    # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 9
+    total = 0
+    average_turns = 0
+    for i in range(1, 11):
+        average = make_averaged(roll_dice)(i, dice)
+        total = max(total, average)
+        if average >= total:
+            average_turns = i
+    return average_turns
 
 
 def winner(strategy0, strategy1):
@@ -404,11 +409,3 @@ def run(*args):
 
     if args.run_experiments:
         run_experiments()
-
-
-dice = make_test_dice(3, 1, 5, 6)
-averaged_roll_dice = make_averaged(roll_dice, 1000)
-# Average of calling roll_dice 1000 times
-# Enter a float (e.g. 1.0) instead of an integer
-average = averaged_roll_dice(2, dice)
-print(average)
