@@ -1,4 +1,5 @@
-HW_SOURCE_FILE=__file__
+from operator import sub, mul, add
+HW_SOURCE_FILE = __file__
 
 
 def num_eights(x):
@@ -22,7 +23,10 @@ def num_eights(x):
     ...       ['Assign', 'AugAssign'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if x <= 10 and x != 8:
+        return 0
+
+    return 1 + num_eights(x // 10) if x % 10 == 8 else num_eights(x // 10)
 
 
 def pingpong(n):
@@ -57,7 +61,17 @@ def pingpong(n):
     >>> check(HW_SOURCE_FILE, 'pingpong', ['Assign', 'AugAssign'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    def helper(result, i, step):
+        if i == n:
+            return result
+        elif i % 8 == 0 or num_eights(i) > 0:
+            return helper(result - step, i + 1, -step)
+        else:
+            return helper(result + step, i + 1, step)
+    return helper(1, 1, 1)
+
+
+pingpong(10)
 
 
 def missing_digits(n):
@@ -87,11 +101,19 @@ def missing_digits(n):
     >>> check(HW_SOURCE_FILE, 'missing_digits', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    def helper(n, digit):
+        if n == 0:
+            return 0
+        last, rest = n % 10, n // 10
+        if last == digit or last + 1 == digit:
+            return helper(rest, last)
+        return 1 + helper(n, digit - 1)
+
+    return helper(n // 10, n % 10)
 
 
 def next_largest_coin(coin):
-    """Return the next coin. 
+    """Return the next coin.
     >>> next_largest_coin(1)
     5
     >>> next_largest_coin(5)
@@ -120,23 +142,22 @@ def count_coins(total):
     242
     >>> from construct_check import check
     >>> # ban iteration
-    >>> check(HW_SOURCE_FILE, 'count_coins', ['While', 'For'])                                          
+    >>> check(HW_SOURCE_FILE, 'count_coins', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    # TODO: comeback here later
+    # def constrained_count(total, smallest_coin):
+    #     if total == 0:
+    #         return 1
+    #     if total < 0:
+    #         return 0
+    #     if smallest_coin == None:
+    #         return 0
+    #     without_coin = constrained_count(
+    #         total, next_largest_coin(smallest_coin))
+    #     with_coin = constrained_count(total - smallest_coin, smallest_coin)
+    #     return without_coin + with_coin
+    # return constrained_count(total, 1)
 
 
-from operator import sub, mul
-
-def make_anonymous_factorial():
-    """Return the value of an expression that computes factorial.
-
-    >>> make_anonymous_factorial()(5)
-    120
-    >>> from construct_check import check
-    >>> # ban any assignments or recursion
-    >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
-    True
-    """
-    return 'YOUR_EXPRESSION_HERE'
-
+count_coins(20)
