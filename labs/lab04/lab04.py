@@ -1,8 +1,8 @@
 LAB_SOURCE_FILE = __file__
 
 
-
 this_file = __file__
+
 
 def skip_add(n):
     """ Takes a number n and returns n + n-2 + n-4 + n-6 + ... + 0.
@@ -18,11 +18,12 @@ def skip_add(n):
     ...       ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n <= 0:
+        return 0
+    return n + skip_add(n - 2)
 
 
 def summation(n, term):
-
     """Return the sum of the first n terms in the sequence defined by term.
     Implement using recursion!
 
@@ -40,7 +41,9 @@ def summation(n, term):
     True
     """
     assert n >= 1
-    "*** YOUR CODE HERE ***"
+    if n == 1:
+        return term(n)
+    return term(n) + summation(n - 1, term)
 
 
 def paths(m, n):
@@ -56,8 +59,9 @@ def paths(m, n):
     >>> paths(1, 157)
     1
     """
-    "*** YOUR CODE HERE ***"
-
+    if (n == 1 or m == 1):
+        return 1
+    return paths(m - 1, n) + paths(m, n - 1)
 
 
 def max_subseq(n, t):
@@ -104,8 +108,11 @@ def max_subseq(n, t):
     >>> max_subseq(12345, 1)
     5
     """
-    "*** YOUR CODE HERE ***"
-
+    if n == 0 or t == 0:
+        return 0
+    with_last = max_subseq(n // 10, t - 1) * 10 + n % 10
+    without_last = max_subseq(n // 10, t)
+    return max(with_last, without_last)
 
 def add_chars(w1, w2):
     """
@@ -133,5 +140,8 @@ def add_chars(w1, w2):
     ...       ['For', 'While', 'Set', 'SetComp']) # Must use recursion
     True
     """
-    "*** YOUR CODE HERE ***"
-
+    if not w1:
+        return w2
+    elif w1[0] == w2[0]:
+        return add_chars(w1[1:], w2[1:])
+    return w2[0] + add_chars(w1, w2[1:])
