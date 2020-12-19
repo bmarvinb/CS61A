@@ -114,6 +114,8 @@ def max_subseq(n, t):
     without_last = max_subseq(n // 10, t)
     return max(with_last, without_last)
 
+max_subseq(20125, 3)
+
 def add_chars(w1, w2):
     """
     Return a string containing the characters you need to add to w1 to get w2.
