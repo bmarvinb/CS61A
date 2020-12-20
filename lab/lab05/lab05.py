@@ -11,10 +11,14 @@ def couple(s, t):
     [['c', 's'], [6, '1']]
     """
     assert len(s) == len(t)
-    result = []
-    for i in range(len(s)):
-        result.append([s[i], t[i]])
-    return result
+
+    # my old code
+    # result = []
+    # for i in range(len(s)):
+    #     result.append([s[i], t[i]])
+    # return result
+
+    return [[s[i], t[i]] for i in range(0, len(s))]
 
 
 from math import sqrt
@@ -164,20 +168,27 @@ def berry_finder(t):
     True
     """
 
-    finded = False
-    def find_berry(t, indent = 0):
-        nonlocal finded
-        if label(t) == 'berry':
-            finded = True
+    # my old code
+    # finded = False
+    # def find_berry(t, indent = 0):
+    #     nonlocal finded
+    #     if label(t) == 'berry':
+    #         finded = True
 
-        for b in branches(t):
-            if label(b) == 'berry':
-                finded = True
-                break
-            find_berry(b, indent + 1)
+    #     for b in branches(t):
+    #         if label(b) == 'berry':
+    #             finded = True
+    #             break
+    #         find_berry(b, indent + 1)
 
-    find_berry(t)
-    return finded
+    # find_berry(t)
+    # return finded
+    if label(t) == 'berry':
+        return True
+    for b in branches(t):
+        if berry_finder(b):
+            return True
+    return False
 
 def sprout_leaves(t, leaves):
     """Sprout new leaves containing the data in leaves at each leaf in
@@ -212,7 +223,9 @@ def sprout_leaves(t, leaves):
           1
           2
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return tree(label(t), [tree(leaf) for leaf in leaves])
+    return tree(label(t), [sprout_leaves(s, leaves) for s in branches(t)])
 
 # Abstraction tests for sprout_leaves and berry_finder
 def check_abstraction():
