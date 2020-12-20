@@ -11,7 +11,10 @@ def couple(s, t):
     [['c', 's'], [6, '1']]
     """
     assert len(s) == len(t)
-    "*** YOUR CODE HERE ***"
+    result = []
+    for i in range(len(s)):
+        result.append([s[i], t[i]])
+    return result
 
 
 from math import sqrt
@@ -26,7 +29,7 @@ def distance(city_a, city_b):
     >>> distance(city_c, city_d)
     5.0
     """
-    "*** YOUR CODE HERE ***"
+    return sqrt((get_lat(city_a) - get_lat(city_b))**2 + (get_lon(city_a) - get_lon(city_b))**2)
 
 def closer_city(lat, lon, city_a, city_b):
     """
@@ -43,7 +46,8 @@ def closer_city(lat, lon, city_a, city_b):
     >>> closer_city(41.29, 174.78, bucharest, vienna)
     'Bucharest'
     """
-    "*** YOUR CODE HERE ***"
+    destination_city = make_city('destination_city', lat, lon)
+    return get_name(city_a) if distance(destination_city, city_a) < distance(destination_city, city_b) else get_name(city_b)
 
 def check_city_abstraction():
     """
@@ -125,8 +129,25 @@ def change_abstraction(change):
 change_abstraction.changed = False
 
 
+def is_tree(tree):
+    if type(tree) != list or len(tree) < 1:
+        return False
+    for branch in branches(tree):
+        if not is_tree(branch):
+            return False
+    return True
+
+def tree(root_label, branches=[]):
+    for branch in branches:
+        assert is_tree(branch), 'branches must be trees'
+    return [root_label] + list(branches)
+def label(tree):
+    return tree[0]
+def branches(tree):
+    return tree[1:]
+
 def berry_finder(t):
-    """Returns True if t contains a node with the value 'berry' and 
+    """Returns True if t contains a node with the value 'berry' and
     False otherwise.
 
     >>> scrat = tree('berry')
@@ -142,8 +163,21 @@ def berry_finder(t):
     >>> berry_finder(t)
     True
     """
-    "*** YOUR CODE HERE ***"
 
+    finded = False
+    def find_berry(t, indent = 0):
+        nonlocal finded
+        if label(t) == 'berry':
+            finded = True
+
+        for b in branches(t):
+            if label(b) == 'berry':
+                finded = True
+                break
+            find_berry(b, indent + 1)
+
+    find_berry(t)
+    return finded
 
 def sprout_leaves(t, leaves):
     """Sprout new leaves containing the data in leaves at each leaf in
