@@ -22,6 +22,8 @@ def couple(s, t):
 
 
 from math import sqrt
+
+
 def distance(city_a, city_b):
     """
     >>> city_a = make_city('city_a', 0, 1)
@@ -33,7 +35,8 @@ def distance(city_a, city_b):
     >>> distance(city_c, city_d)
     5.0
     """
-    return sqrt((get_lat(city_a) - get_lat(city_b))**2 + (get_lon(city_a) - get_lon(city_b))**2)
+    return sqrt((get_lat(city_a) - get_lat(city_b)) ** 2 + (get_lon(city_a) - get_lon(city_b)) ** 2)
+
 
 def closer_city(lat, lon, city_a, city_b):
     """
@@ -51,7 +54,9 @@ def closer_city(lat, lon, city_a, city_b):
     'Bucharest'
     """
     destination_city = make_city('destination_city', lat, lon)
-    return get_name(city_a) if distance(destination_city, city_a) < distance(destination_city, city_b) else get_name(city_b)
+    return get_name(city_a) if distance(destination_city, city_a) < distance(destination_city, city_b) else get_name(
+        city_b)
+
 
 def check_city_abstraction():
     """
@@ -90,9 +95,10 @@ def make_city(name, lat, lon):
     1
     """
     if change_abstraction.changed:
-        return {"name" : name, "lat" : lat, "lon" : lon}
+        return {"name": name, "lat": lat, "lon": lon}
     else:
         return [name, lat, lon]
+
 
 def get_name(city):
     """
@@ -105,6 +111,7 @@ def get_name(city):
     else:
         return city[0]
 
+
 def get_lat(city):
     """
     >>> city = make_city('Berkeley', 0, 1)
@@ -115,6 +122,7 @@ def get_lat(city):
         return city["lat"]
     else:
         return city[1]
+
 
 def get_lon(city):
     """
@@ -127,8 +135,10 @@ def get_lon(city):
     else:
         return city[2]
 
+
 def change_abstraction(change):
     change_abstraction.changed = change
+
 
 change_abstraction.changed = False
 
@@ -141,14 +151,20 @@ def is_tree(tree):
             return False
     return True
 
+
 def tree(root_label, branches=[]):
     for branch in branches:
         assert is_tree(branch), 'branches must be trees'
     return [root_label] + list(branches)
+
+
 def label(tree):
     return tree[0]
+
+
 def branches(tree):
     return tree[1:]
+
 
 def berry_finder(t):
     """Returns True if t contains a node with the value 'berry' and
@@ -190,6 +206,7 @@ def berry_finder(t):
             return True
     return False
 
+
 def sprout_leaves(t, leaves):
     """Sprout new leaves containing the data in leaves at each leaf in
     the original tree t and return the resulting tree.
@@ -226,6 +243,7 @@ def sprout_leaves(t, leaves):
     if is_leaf(t):
         return tree(label(t), [tree(leaf) for leaf in leaves])
     return tree(label(t), [sprout_leaves(s, leaves) for s in branches(t)])
+
 
 # Abstraction tests for sprout_leaves and berry_finder
 def check_abstraction():
@@ -361,6 +379,7 @@ def build_successors_table(tokens):
         prev = word
     return table
 
+
 def construct_sent(word, table):
     """Prints a random sentence starting with word, sampling from
     table.
@@ -377,6 +396,7 @@ def construct_sent(word, table):
         "*** YOUR CODE HERE ***"
     return result.strip() + word
 
+
 def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com/shakespeare.txt'):
     """Return the words of Shakespeare's plays as a list."""
     import os
@@ -387,6 +407,7 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
         shakespeare = urlopen(url)
         return shakespeare.read().decode(encoding='ascii').split()
 
+
 # Uncomment the following two lines
 # tokens = shakespeare_tokens()
 # table = build_successors_table(tokens)
@@ -394,7 +415,6 @@ def shakespeare_tokens(path='shakespeare.txt', url='http://composingprograms.com
 def random_sent():
     import random
     return construct_sent(random.choice(table['.']), table)
-
 
 
 # Tree ADT
@@ -410,6 +430,7 @@ def tree(label, branches=[]):
             assert is_tree(branch), 'branches must be trees'
         return [label] + list(branches)
 
+
 def label(tree):
     """Return the label value of a tree."""
     if change_abstraction.changed:
@@ -417,12 +438,14 @@ def label(tree):
     else:
         return tree[0]
 
+
 def branches(tree):
     """Return the list of branches of the given tree."""
     if change_abstraction.changed:
         return tree['branches']
     else:
         return tree[1:]
+
 
 def is_tree(tree):
     """Returns True if the given tree is a tree, and False otherwise."""
@@ -441,14 +464,17 @@ def is_tree(tree):
                 return False
         return True
 
+
 def is_leaf(tree):
     """Returns True if the given tree's list of branches is empty, and False
     otherwise.
     """
     return not branches(tree)
 
+
 def change_abstraction(change):
     change_abstraction.changed = change
+
 
 change_abstraction.changed = False
 
@@ -476,6 +502,7 @@ def print_tree(t, indent=0):
     for b in branches(t):
         print_tree(b, indent + 1)
 
+
 def copy_tree(t):
     """Returns a copy of t. Only for testing purposes.
 
@@ -486,4 +513,3 @@ def copy_tree(t):
     5
     """
     return tree(label(t), [copy_tree(b) for b in branches(t)])
-
