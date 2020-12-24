@@ -301,8 +301,10 @@ def coords(fn, seq, lower, upper):
     >>> coords(fn, seq, 1, 9)
     [[-2, 4], [1, 1], [3, 9]]
     """
-    "*** YOUR CODE HERE ***"
-    return ______
+    # my code
+    # return list(filter(lambda pair: pair[1] >= lower and pair[1] <= upper, list(map(lambda n: [n, fn(n)], seq))))
+    
+    return [[x, fn(x)] for x in seq if lower <= fn(x) <= upper]
 
 
 def riffle(deck):
