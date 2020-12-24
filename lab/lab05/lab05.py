@@ -303,7 +303,7 @@ def coords(fn, seq, lower, upper):
     """
     # my code
     # return list(filter(lambda pair: pair[1] >= lower and pair[1] <= upper, list(map(lambda n: [n, fn(n)], seq))))
-    
+
     return [[x, fn(x)] for x in seq if lower <= fn(x) <= upper]
 
 
@@ -316,8 +316,7 @@ def riffle(deck):
     >>> riffle(range(20))
     [0, 10, 1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19]
     """
-    "*** YOUR CODE HERE ***"
-    return _______
+    return [deck[(i % 2) * len(deck) // 2 + i // 2] for i in range(len(deck))]
 
 
 def add_trees(t1, t2):
