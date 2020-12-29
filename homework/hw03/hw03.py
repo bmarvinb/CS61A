@@ -115,14 +115,6 @@ def balanced(m):
 
     return lhs == rhs
 
-t, u, v = examples()
-balanced(t)
-balanced(v)
-w = mobile(arm(3, t), arm(2, u))
-balanced(w)
-balanced(mobile(arm(1, v), arm(1, w)))
-balanced(mobile(arm(1, w), arm(1, v)))
-
 def totals_tree(m):
     """Return a tree representing the mobile with its total weight at the root.
 
