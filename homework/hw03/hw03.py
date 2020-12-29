@@ -104,7 +104,24 @@ def balanced(m):
     >>> check(HW_SOURCE_FILE, 'balanced', ['Index'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    def get_weight(s):
+        assert is_arm(s)
+        if is_planet(end(s)):
+            return size(end(s))
+        return length(s) * (get_weight(left(end(s))) + get_weight(right(end(s))))
+
+    lhs = length(left(m)) * (get_weight(left(m))) if is_planet(end(left(m))) else get_weight(left(m))
+    rhs = length(right(m)) * (get_weight(right(m))) if is_planet(end(right(m))) else get_weight(right(m))
+
+    return lhs == rhs
+
+t, u, v = examples()
+balanced(t)
+balanced(v)
+w = mobile(arm(3, t), arm(2, u))
+balanced(w)
+balanced(mobile(arm(1, v), arm(1, w)))
+balanced(mobile(arm(1, w), arm(1, v)))
 
 def totals_tree(m):
     """Return a tree representing the mobile with its total weight at the root.
