@@ -202,7 +202,14 @@ def preorder(t):
     >>> preorder(tree(2, [tree(4, [tree(6)])]))
     [2, 4, 6]
     """
-    "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return [label(t)]
+
+    ordered_list = [label(t)]
+    for i in branches(t):
+        ordered_list += preorder(i)
+
+    return ordered_list
 
 
 def has_path(t, word):
