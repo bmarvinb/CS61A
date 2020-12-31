@@ -387,17 +387,3 @@ def copy_tree(t):
     5
     """
     return tree(label(t), [copy_tree(b) for b in branches(t)])
-
-
-yggdrasil = tree('odin',
-    [tree('balder',
-          [tree('thor'),
-           tree('freya')]),
-     tree('frigg',
-          [tree('thor')]),
-     tree('thor',
-          [tree('sif'),
-           tree('thor')]),
-     tree('thor')])
-laerad = copy_tree(yggdrasil) # copy yggdrasil for testing purposes
-print_tree(replace_leaf(yggdrasil, 'thor', 'freya'))
