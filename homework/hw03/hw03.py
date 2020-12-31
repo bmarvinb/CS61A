@@ -186,8 +186,11 @@ def replace_leaf(t, find_value, replace_value):
     >>> laerad == yggdrasil # Make sure original tree is unmodified
     True
     """
-    "*** YOUR CODE HERE ***"
 
+    if is_leaf(t) and label(t) == find_value:
+        return tree(replace_value)
+
+    return tree(label(t), [replace_leaf(b, find_value, replace_value) for b in branches(t)])
 
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
@@ -385,3 +388,16 @@ def copy_tree(t):
     """
     return tree(label(t), [copy_tree(b) for b in branches(t)])
 
+
+yggdrasil = tree('odin',
+    [tree('balder',
+          [tree('thor'),
+           tree('freya')]),
+     tree('frigg',
+          [tree('thor')]),
+     tree('thor',
+          [tree('sif'),
+           tree('thor')]),
+     tree('thor')])
+laerad = copy_tree(yggdrasil) # copy yggdrasil for testing purposes
+print_tree(replace_leaf(yggdrasil, 'thor', 'freya'))
