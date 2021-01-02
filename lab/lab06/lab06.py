@@ -49,7 +49,36 @@ def make_fib():
     >>> check(this_file, 'make_fib', ['List'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    n = 0
+    m = 1
+    i = 0
+
+    def fib():
+        nonlocal n
+        nonlocal m
+        nonlocal i
+
+        if i == 0:
+            i += 1
+            return 0
+        elif i == 1:
+            i += 1
+            return 1
+        else:
+            fib = n + m
+            n = m
+            m = fib
+            return fib
+
+    return fib
+
+
+fib = make_fib()
+fib()
+fib()
+fib()
+fib()
+fib()
 
 
 def insert_items(lst, entry, elem):
