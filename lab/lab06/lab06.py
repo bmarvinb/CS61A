@@ -73,14 +73,6 @@ def make_fib():
     return fib
 
 
-fib = make_fib()
-fib()
-fib()
-fib()
-fib()
-fib()
-
-
 def insert_items(lst, entry, elem):
     """
     >>> test_lst = [1, 5, 8, 5, 2, 3]
@@ -97,4 +89,7 @@ def insert_items(lst, entry, elem):
     >>> large_lst3 is large_lst
     True
     """
-    "*** YOUR CODE HERE ***"
+    indices = [i for i, x in enumerate(lst) if x == entry]
+    for idx, val in enumerate(indices):
+        lst.insert((val + 1) + idx, elem)
+    return lst
