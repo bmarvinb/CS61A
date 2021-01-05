@@ -33,8 +33,22 @@ def about(topic):
     """
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+
+    def is_about(sentence):
+        for word in split(lower(remove_punctuation(sentence))):
+            if word in topic:
+                return True
+        return False
+    return is_about
     # END PROBLEM 2
+
+
+about_dogs = about(['dog', 'dogs', 'pup', 'puppy'])
+about_dogs('"DOGS" stands for Department Of Geophysical Science.')
+choose(['Cute Dog!', 'That is a cat.', 'Nice pup!'], about_dogs, 0)
+'Cute Dog!'
+choose(['Cute Dog!', 'That is a cat.', 'Nice pup.'], about_dogs, 1)
+'Nice pup.'
 
 
 def accuracy(typed, reference):
