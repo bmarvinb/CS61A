@@ -43,14 +43,6 @@ def about(topic):
     # END PROBLEM 2
 
 
-about_dogs = about(['dog', 'dogs', 'pup', 'puppy'])
-about_dogs('"DOGS" stands for Department Of Geophysical Science.')
-choose(['Cute Dog!', 'That is a cat.', 'Nice pup!'], about_dogs, 0)
-'Cute Dog!'
-choose(['Cute Dog!', 'That is a cat.', 'Nice pup.'], about_dogs, 1)
-'Nice pup.'
-
-
 def accuracy(typed, reference):
     """Return the accuracy (percentage of words typed correctly) of TYPED
     when compared to the prefix of REFERENCE that was typed.
