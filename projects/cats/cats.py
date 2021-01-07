@@ -79,7 +79,9 @@ def wpm(typed, elapsed):
     """Return the words-per-minute (WPM) of the TYPED string."""
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    if len(typed) == 0:
+        return 0.0
+    return len(typed) * (60 / elapsed) / 5
     # END PROBLEM 4
 
 
