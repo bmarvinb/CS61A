@@ -109,7 +109,7 @@ def shifty_shifts(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    
     # END PROBLEM 6
 
 
