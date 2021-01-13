@@ -91,7 +91,15 @@ def autocorrect(user_word, valid_words, diff_function, limit):
     than LIMIT.
     """
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    if user_word in valid_words:
+        return user_word
+
+    corrected_word = min(valid_words, key=lambda w: diff_function(
+        user_word, w, limit))
+
+    final_diff = diff_function(user_word, corrected_word, limit)
+
+    return user_word if final_diff > limit else corrected_word
     # END PROBLEM 5
 
 
@@ -282,3 +290,13 @@ def run(*args):
     args = parser.parse_args()
     if args.t:
         run_typing_test(args.topic)
+
+
+def first_diff(w1, w2, limit): return 1 if w1[0] != w2[0] else 0
+
+
+autocorrect("wrod", ["word", "rod"], first_diff, 1)
+# 'word'
+autocorrect("inside", ["idea", "inside"], first_diff, 0.5)
+# 'inside'
+autocorrect("inside", ["idea", "inside"], first_diff, 0.5)
