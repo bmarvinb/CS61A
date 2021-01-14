@@ -109,7 +109,18 @@ def shifty_shifts(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    
+    if start == goal:
+        return 0
+
+    if limit == 0:
+        return 1
+
+    if start == '' or goal == '':
+        return max(len(start), len(goal))
+
+    change_num = 0 if start[0] == goal[0] else 1
+
+    return change_num + shifty_shifts(start[1:], goal[1:], limit - change_num)
     # END PROBLEM 6
 
 
@@ -292,11 +303,7 @@ def run(*args):
         run_typing_test(args.topic)
 
 
-def first_diff(w1, w2, limit): return 1 if w1[0] != w2[0] else 0
+print(sum([shifty_shifts('boist', 'spume', k) > k for k in range(5)]))
 
-
-autocorrect("wrod", ["word", "rod"], first_diff, 1)
-# 'word'
-autocorrect("inside", ["idea", "inside"], first_diff, 0.5)
-# 'inside'
-autocorrect("inside", ["idea", "inside"], first_diff, 0.5)
+print(sum([True, True, True, True, True]))
+# 5
