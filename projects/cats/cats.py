@@ -156,7 +156,25 @@ def final_diff(start, goal, limit):
 def report_progress(typed, prompt, user_id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    # correct = 0
+    # mistake = False
+    # for index in range(len(typed)):
+    #     if not mistake and typed[index] == prompt[index]:
+    #         correct += 1
+    #     else:
+    #         mistake = True
+    # rate = len(prompt) / correct
+    # send({'id': user_id, 'progress': rate})
+    # return rate
+    num_correct = 0
+    for k in range(len(typed)):
+        if typed[k] == prompt[k]:
+            num_correct += 1
+        else:
+            break
+    progress = num_correct / len(prompt)
+    send({'id': user_id, 'progress': progress})
+    return progress
     # END PROBLEM 8
 
 
@@ -181,8 +199,19 @@ def time_per_word(times_per_player, words):
                           the player finished typing each word.
         words: a list of words, in the order they are typed.
     """
+
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    times = []
+    for i in range(len(times_per_player)):
+        time = []
+        for j in range(len(times_per_player[i])):
+            if j > 0:
+                k = j - 1
+                n = times_per_player[i][j] - times_per_player[i][k]
+                time.append(n)
+        times.append(time)
+
+    return [words, times]
     # END PROBLEM 9
 
 
@@ -194,12 +223,21 @@ def fastest_words(game):
     Returns:
         a list of lists containing which words each player typed fastest
     """
-    player_indices = range(len(all_times(game))
-                           )  # contains an *index* for each player
-    # contains an *index* for each word
+    player_indices = range(len(all_times(game)))
     word_indices = range(len(all_words(game)))
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    fastest = [[] for _ in player_indices]
+    for word_indice in word_indices:
+        i = 0
+        minimum = float("inf")
+
+        for player_indice in player_indices:
+            if time(game, player_indice, word_indice) < minimum:
+                i = player_indice
+                minimum = time(game, player_indice, word_indice)
+
+        fastest[i].append(word_at(game, word_indice))
+    return fastest
     # END PROBLEM 10
 
 
@@ -297,8 +335,3 @@ def run(*args):
     args = parser.parse_args()
     if args.t:
         run_typing_test(args.topic)
-
-
-pawssible_patches('ats', 'cats', 10)  # add
-pawssible_patches('dogs', 'ogs', 10)  # remove
-pawssible_patches('hello', 'mello', 10)  # substitute
