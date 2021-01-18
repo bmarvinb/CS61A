@@ -118,33 +118,29 @@ def shifty_shifts(start, goal, limit):
     if start == '' or goal == '':
         return max(len(start), len(goal))
 
-    change_num = 0 if start[0] == goal[0] else 1
+    diff = 0 if start[0] == goal[0] else 1
 
-    return change_num + shifty_shifts(start[1:], goal[1:], limit - change_num)
+    return diff + shifty_shifts(start[1:], goal[1:], limit - diff)
     # END PROBLEM 6
 
 
 def pawssible_patches(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
-    assert False, 'Remove this line'
-
-    if ______________:  # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    elif ___________:  # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
+    if limit < 0:
+        return 1
+    elif start == goal:
+        return 0
+    elif min(len(start), len(goal)) == 0:
+        return max(len(start), len(goal))
     else:
-        add_diff = ...  # Fill in these lines
-        remove_diff = ...
-        substitute_diff = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
+        add_diff = 1 + pawssible_patches(start, goal[1:], limit - 1)
+        remove_diff = 1 + pawssible_patches(start[1:], goal, limit - 1)
+
+        diff = 0 if start[0] == goal[0] else 1
+        substitute_diff = diff + \
+            pawssible_patches(start[1:], goal[1:], limit - diff)
+
+    return min(add_diff, remove_diff, substitute_diff)
 
 
 def final_diff(start, goal, limit):
@@ -303,7 +299,6 @@ def run(*args):
         run_typing_test(args.topic)
 
 
-print(sum([shifty_shifts('boist', 'spume', k) > k for k in range(5)]))
-
-print(sum([True, True, True, True, True]))
-# 5
+pawssible_patches('ats', 'cats', 10)  # add
+pawssible_patches('dogs', 'ogs', 10)  # remove
+pawssible_patches('hello', 'mello', 10)  # substitute
