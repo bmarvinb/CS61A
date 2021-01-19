@@ -174,8 +174,7 @@ class IsEqual(BuiltIn):
         if all(isinstance(x, ValueHolder) for x in operands):
             return bools[operands[0].value == operands[1].value]
         elif all(isinstance(x, Pair) for x in operands):
-            return bools[IsEqual().execute_evaluated([operands[0].first, operands[1].first], frame) is SingletonTrue and \
+            return bools[IsEqual().execute_evaluated([operands[0].first, operands[1].first], frame) is SingletonTrue and
                          IsEqual().execute_evaluated([operands[0].rest, operands[1].rest], frame) is SingletonTrue]
         else:
             return IsEq().execute_evaluated(operands, frame)
-

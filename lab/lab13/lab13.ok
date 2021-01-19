@@ -1,14 +1,23 @@
 {
     "name": "Lab 13",
-    "endpoint": "cal/cs61a/fa20/lab13",
+    "endpoint": "cal/cs61a/sp19/lab13",
     "src": [
-        "lab13.sql"
+        "lab13.py",
+        "lab13_extra.py",
+        "lab13.scm",
+        "lab13_extra.scm"
     ],
     "tests": {
-        "tests/*.py": "ok_test"
+        "lab13.py:prune_small": "doctest",
+        "tests/compose-all.py": "ok_test",
+        "lab13_extra.py:num_splits": "doctest",
+        "lab13_extra.py:insert": "doctest",
+        "tests/has-cycle.py": "ok_test",
+        "tests/switch.py": "ok_test"
     },
     "default_tests": [
-        "default"
+        "prune_small",
+        "compose-all"
     ],
     "protocols": [
         "restore",

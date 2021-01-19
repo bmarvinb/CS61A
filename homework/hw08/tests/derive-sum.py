@@ -28,7 +28,7 @@ test = {
       ],
       'scored': True,
       'setup': r"""
-      scm> (load-all ".")
+      scm> (load 'hw08)
       """,
       'teardown': '',
       'type': 'scheme'
@@ -47,7 +47,7 @@ test = {
       ],
       'scored': True,
       'setup': r"""
-      scm> (load-all ".")
+      scm> (load 'hw08)
       """,
       'teardown': '',
       'type': 'scheme'

@@ -1,42 +1,127 @@
-class VendingMachine:
-    """A vending machine that vends some product for some price.
+def make_counter():
+    """Return a counter function.
 
-    >>> v = VendingMachine('candy', 10)
-    >>> v.vend()
-    'Inventory empty. Restocking required.'
-    >>> v.add_funds(15)
-    'Inventory empty. Restocking required. Here is your $15.'
-    >>> v.restock(2)
-    'Current candy stock: 2'
-    >>> v.vend()
-    'You must add $10 more funds.'
-    >>> v.add_funds(7)
-    'Current balance: $7'
-    >>> v.vend()
-    'You must add $3 more funds.'
-    >>> v.add_funds(5)
-    'Current balance: $12'
-    >>> v.vend()
-    'Here is your candy and $2 change.'
-    >>> v.add_funds(10)
-    'Current balance: $10'
-    >>> v.vend()
-    'Here is your candy.'
-    >>> v.add_funds(15)
-    'Inventory empty. Restocking required. Here is your $15.'
-
-    >>> w = VendingMachine('soda', 2)
-    >>> w.restock(3)
-    'Current soda stock: 3'
-    >>> w.restock(3)
-    'Current soda stock: 6'
-    >>> w.add_funds(2)
-    'Current balance: $2'
-    >>> w.vend()
-    'Here is your soda.'
+    >>> c = make_counter()
+    >>> c('a')
+    1
+    >>> c('a')
+    2
+    >>> c('b')
+    1
+    >>> c('a')
+    3
+    >>> c2 = make_counter()
+    >>> c2('b')
+    1
+    >>> c2('b')
+    2
+    >>> c('b') + c2('b')
+    5
     """
     "*** YOUR CODE HERE ***"
 
+def make_fib():
+    """Returns a function that returns the next Fibonacci number
+    every time it is called.
+
+    >>> fib = make_fib()
+    >>> fib()
+    0
+    >>> fib()
+    1
+    >>> fib()
+    1
+    >>> fib()
+    2
+    >>> fib()
+    3
+    >>> fib2 = make_fib()
+    >>> fib() + sum([fib2() for _ in range(5)])
+    12
+    """
+    "*** YOUR CODE HERE ***"
+
+def make_withdraw(balance, password):
+    """Return a password-protected withdraw function.
+
+    >>> w = make_withdraw(100, 'hax0r')
+    >>> w(25, 'hax0r')
+    75
+    >>> error = w(90, 'hax0r')
+    >>> error
+    'Insufficient funds'
+    >>> error = w(25, 'hwat')
+    >>> error
+    'Incorrect password'
+    >>> new_bal = w(25, 'hax0r')
+    >>> new_bal
+    50
+    >>> w(75, 'a')
+    'Incorrect password'
+    >>> w(10, 'hax0r')
+    40
+    >>> w(20, 'n00b')
+    'Incorrect password'
+    >>> w(10, 'hax0r')
+    "Your account is locked. Attempts: ['hwat', 'a', 'n00b']"
+    >>> w(10, 'l33t')
+    "Your account is locked. Attempts: ['hwat', 'a', 'n00b']"
+    >>> type(w(10, 'l33t')) == str
+    True
+    """
+    "*** YOUR CODE HERE ***"
+
+def make_joint(withdraw, old_password, new_password):
+    """Return a password-protected withdraw function that has joint access to
+    the balance of withdraw.
+
+    >>> w = make_withdraw(100, 'hax0r')
+    >>> w(25, 'hax0r')
+    75
+    >>> make_joint(w, 'my', 'secret')
+    'Incorrect password'
+    >>> j = make_joint(w, 'hax0r', 'secret')
+    >>> w(25, 'secret')
+    'Incorrect password'
+    >>> j(25, 'secret')
+    50
+    >>> j(25, 'hax0r')
+    25
+    >>> j(100, 'secret')
+    'Insufficient funds'
+
+    >>> j2 = make_joint(j, 'secret', 'code')
+    >>> j2(5, 'code')
+    20
+    >>> j2(5, 'secret')
+    15
+    >>> j2(5, 'hax0r')
+    10
+
+    >>> j2(25, 'password')
+    'Incorrect password'
+    >>> j2(5, 'secret')
+    "Your account is locked. Attempts: ['my', 'secret', 'password']"
+    >>> j(5, 'secret')
+    "Your account is locked. Attempts: ['my', 'secret', 'password']"
+    >>> w(5, 'hax0r')
+    "Your account is locked. Attempts: ['my', 'secret', 'password']"
+    >>> make_joint(w, 'hax0r', 'hello')
+    "Your account is locked. Attempts: ['my', 'secret', 'password']"
+    """
+    "*** YOUR CODE HERE ***"
+
+def preorder(t):
+    """Return a list of the entries in this tree in the order that they
+    would be visited by a preorder traversal (see problem description).
+
+    >>> numbers = tree(1, [tree(2), tree(3, [tree(4), tree(5)]), tree(6, [tree(7)])])
+    >>> preorder(numbers)
+    [1, 2, 3, 4, 5, 6, 7]
+    >>> preorder(tree(2, [tree(4, [tree(6)])]))
+    [2, 4, 6]
+    """
+    "*** YOUR CODE HERE ***"
 
 class Mint:
     """A mint creates coins by stamping on years.
@@ -45,29 +130,30 @@ class Mint:
 
     >>> mint = Mint()
     >>> mint.year
-    2020
+    2017
     >>> dime = mint.create(Dime)
     >>> dime.year
-    2020
+    2017
     >>> Mint.current_year = 2100  # Time passes
     >>> nickel = mint.create(Nickel)
     >>> nickel.year     # The mint has not updated its stamp yet
-    2020
-    >>> nickel.worth()  # 5 cents + (80 - 50 years)
-    35
+    2017
+    >>> nickel.worth()  # 5 cents + (83 - 50 years)
+    38
     >>> mint.update()   # The mint's year is updated to 2100
     >>> Mint.current_year = 2175     # More time passes
     >>> mint.create(Dime).worth()    # 10 cents + (75 - 50 years)
     35
     >>> Mint().create(Dime).worth()  # A new mint has the current year
     10
-    >>> dime.worth()     # 10 cents + (155 - 50 years)
-    115
+    >>> dime.worth()     # 10 cents + (160 - 50 years)
+    118
     >>> Dime.cents = 20  # Upgrade all dimes!
-    >>> dime.worth()     # 20 cents + (155 - 50 years)
-    125
+    >>> dime.worth()     # 20 cents + (160 - 50 years)
+    128
+
     """
-    current_year = 2020
+    current_year = 2017
 
     def __init__(self):
         self.update()
@@ -91,222 +177,67 @@ class Nickel(Coin):
 class Dime(Coin):
     cents = 10
 
+## Tree ADT ##
 
-def store_digits(n):
-    """Stores the digits of a positive number n in a linked list.
+def tree(label, branches=[]):
+    """Construct a tree with the given label value and a list of branches."""
+    for branch in branches:
+        assert is_tree(branch), 'branches must be trees'
+    return [label] + list(branches)
 
-    >>> s = store_digits(1)
-    >>> s
-    Link(1)
-    >>> store_digits(2345)
-    Link(2, Link(3, Link(4, Link(5))))
-    >>> store_digits(876)
-    Link(8, Link(7, Link(6)))
-    >>> # a check for restricted functions
-    >>> import inspect, re
-    >>> cleaned = re.sub(r"#.*\\n", '', re.sub(r'"{3}[\s\S]*?"{3}', '', inspect.getsource(store_digits)))
-    >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
-    """
-    "*** YOUR CODE HERE ***"
+def label(tree):
+    """Return the label value of a tree."""
+    return tree[0]
 
+def branches(tree):
+    """Return the list of branches of the given tree."""
+    return tree[1:]
 
-def is_bst(t):
-    """Returns True if the Tree t has the structure of a valid BST.
-
-    >>> t1 = Tree(6, [Tree(2, [Tree(1), Tree(4)]), Tree(7, [Tree(7), Tree(8)])])
-    >>> is_bst(t1)
-    True
-    >>> t2 = Tree(8, [Tree(2, [Tree(9), Tree(1)]), Tree(3, [Tree(6)]), Tree(5)])
-    >>> is_bst(t2)
-    False
-    >>> t3 = Tree(6, [Tree(2, [Tree(4), Tree(1)]), Tree(7, [Tree(7), Tree(8)])])
-    >>> is_bst(t3)
-    False
-    >>> t4 = Tree(1, [Tree(2, [Tree(3, [Tree(4)])])])
-    >>> is_bst(t4)
-    True
-    >>> t5 = Tree(1, [Tree(0, [Tree(-1, [Tree(-2)])])])
-    >>> is_bst(t5)
-    True
-    >>> t6 = Tree(1, [Tree(4, [Tree(2, [Tree(3)])])])
-    >>> is_bst(t6)
-    True
-    >>> t7 = Tree(2, [Tree(1, [Tree(5)]), Tree(4)])
-    >>> is_bst(t7)
-    False
-    """
-    "*** YOUR CODE HERE ***"
-
-
-def preorder(t):
-    """Return a list of the entries in this tree in the order that they
-    would be visited by a preorder traversal (see problem description).
-
-    >>> numbers = Tree(1, [Tree(2), Tree(3, [Tree(4), Tree(5)]), Tree(6, [Tree(7)])])
-    >>> preorder(numbers)
-    [1, 2, 3, 4, 5, 6, 7]
-    >>> preorder(Tree(2, [Tree(4, [Tree(6)])]))
-    [2, 4, 6]
-    """
-    "*** YOUR CODE HERE ***"
-
-
-def path_yielder(t, value):
-    """Yields all possible paths from the root of t to a node with the label value
-    as a list.
-
-    >>> t1 = Tree(1, [Tree(2, [Tree(3), Tree(4, [Tree(6)]), Tree(5)]), Tree(5)])
-    >>> print(t1)
-    1
-      2
-        3
-        4
-          6
-        5
-      5
-    >>> next(path_yielder(t1, 6))
-    [1, 2, 4, 6]
-    >>> path_to_5 = path_yielder(t1, 5)
-    >>> sorted(list(path_to_5))
-    [[1, 2, 5], [1, 5]]
-
-    >>> t2 = Tree(0, [Tree(2, [t1])])
-    >>> print(t2)
-    0
-      2
-        1
-          2
-            3
-            4
-              6
-            5
-          5
-    >>> path_to_2 = path_yielder(t2, 2)
-    >>> sorted(list(path_to_2))
-    [[0, 2], [0, 2, 1, 2]]
-    """
-
-    "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
-
-            "*** YOUR CODE HERE ***"
-
-
-class Link:
-    """A linked list.
-
-    >>> s = Link(1)
-    >>> s.first
-    1
-    >>> s.rest is Link.empty
-    True
-    >>> s = Link(2, Link(3, Link(4)))
-    >>> s.first = 5
-    >>> s.rest.first = 6
-    >>> s.rest.rest = Link.empty
-    >>> s                                    # Displays the contents of repr(s)
-    Link(5, Link(6))
-    >>> s.rest = Link(7, Link(Link(8, Link(9))))
-    >>> s
-    Link(5, Link(7, Link(Link(8, Link(9)))))
-    >>> print(s)                             # Prints str(s)
-    <5 7 <8 9>>
-    """
-    empty = ()
-
-    def __init__(self, first, rest=empty):
-        assert rest is Link.empty or isinstance(rest, Link)
-        self.first = first
-        self.rest = rest
-
-    def __repr__(self):
-        if self.rest is not Link.empty:
-            rest_repr = ', ' + repr(self.rest)
-        else:
-            rest_repr = ''
-        return 'Link(' + repr(self.first) + rest_repr + ')'
-
-    def __str__(self):
-        string = '<'
-        while self.rest is not Link.empty:
-            string += str(self.first) + ' '
-            self = self.rest
-        return string + str(self.first) + '>'
-
-
-class Tree:
-    """
-    >>> t = Tree(3, [Tree(2, [Tree(5)]), Tree(4)])
-    >>> t.label
-    3
-    >>> t.branches[0].label
-    2
-    >>> t.branches[1].is_leaf()
-    True
-    """
-    def __init__(self, label, branches=[]):
-        for b in branches:
-            assert isinstance(b, Tree)
-        self.label = label
-        self.branches = list(branches)
-
-    def is_leaf(self):
-        return not self.branches
-
-    def map(self, fn):
-        """
-        Apply a function `fn` to each node in the tree and mutate the tree.
-
-        >>> t1 = Tree(1)
-        >>> t1.map(lambda x: x + 2)
-        >>> t1.map(lambda x : x * 4)
-        >>> t1.label
-        12
-        >>> t2 = Tree(3, [Tree(2, [Tree(5)]), Tree(4)])
-        >>> t2.map(lambda x: x * x)
-        >>> t2
-        Tree(9, [Tree(4, [Tree(25)]), Tree(16)])
-        """
-        self.label = fn(self.label)
-        for b in self.branches:
-            b.map(fn)
-
-    def __contains__(self, e):
-        """
-        Determine whether an element exists in the tree.
-
-        >>> t1 = Tree(1)
-        >>> 1 in t1
-        True
-        >>> 8 in t1
-        False
-        >>> t2 = Tree(3, [Tree(2, [Tree(5)]), Tree(4)])
-        >>> 6 in t2
-        False
-        >>> 5 in t2
-        True
-        """
-        if self.label == e:
-            return True
-        for b in self.branches:
-            if e in b:
-                return True
+def is_tree(tree):
+    """Returns True if the given tree is a tree, and False otherwise."""
+    if type(tree) != list or len(tree) < 1:
         return False
+    for branch in branches(tree):
+        if not is_tree(branch):
+            return False
+    return True
 
-    def __repr__(self):
-        if self.branches:
-            branch_str = ', ' + repr(self.branches)
-        else:
-            branch_str = ''
-        return 'Tree({0}{1})'.format(self.label, branch_str)
+def is_leaf(tree):
+    """Returns True if the given tree's list of branches is empty, and False
+    otherwise.
+    """
+    return not branches(tree)
 
-    def __str__(self):
-        def print_tree(t, indent=0):
-            tree_str = '  ' * indent + str(t.label) + "\n"
-            for b in t.branches:
-                tree_str += print_tree(b, indent + 1)
-            return tree_str
-        return print_tree(self).rstrip()
+def print_tree(t, indent=0):
+    """Print a representation of this tree in which each node is
+    indented by two spaces times its depth from the root.
 
+    >>> print_tree(tree(1))
+    1
+    >>> print_tree(tree(1, [tree(2)]))
+    1
+      2
+    >>> numbers = tree(1, [tree(2), tree(3, [tree(4), tree(5)]), tree(6, [tree(7)])])
+    >>> print_tree(numbers)
+    1
+      2
+      3
+        4
+        5
+      6
+        7
+    """
+    print('  ' * indent + str(label(t)))
+    for b in branches(t):
+        print_tree(b, indent + 1)
+
+def copy_tree(t):
+    """Returns a copy of t. Only for testing purposes.
+
+    >>> t = tree(5)
+    >>> copy = copy_tree(t)
+    >>> t = tree(6)
+    >>> print_tree(copy)
+    5
+    """
+    return tree(label(t), [copy_tree(b) for b in branches(t)])

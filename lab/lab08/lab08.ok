@@ -1,18 +1,29 @@
 {
     "name": "Lab 8",
-    "endpoint": "cal/cs61a/fa20/lab08",
+    "endpoint": "cal/cs61a/sp19/lab08",
     "src": [
         "lab08.py"
     ],
     "tests": {
-        "lab*.py": "doctest",
-        "tests/*.py": "ok_test"
+        "lab08.py": "doctest",
+        "tests/growth.py": "ok_test",
+        "tests/boom.py": "ok_test",
+        "tests/zap.py": "ok_test"
     },
     "default_tests": [
-        "link",
-        "convert_link",
-        "every_other",
-        "cumulative_mul"
+        "deep_len",
+        "make_to_string",
+        "tree_map",
+        "long_paths",
+        "growth",
+        "subseqs",
+        "inc_subseqs",
+        "num_trees",
+        "Keyboard",
+        "make_advanced_counter_maker",
+        "trade",
+        "boom",
+        "zap"
     ],
     "protocols": [
         "restore",

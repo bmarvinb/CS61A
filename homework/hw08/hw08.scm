@@ -1,5 +1,33 @@
+(define (reverse lst)
+    'YOUR-CODE-HERE
+)
+
+; helper function
+; returns the values of lst that are bigger than x
+; e.g., (larger-values 3 '(1 2 3 4 5 1 2 3 4 5)) --> (4 5 4 5)
+(define (larger-values x lst)
+    'YOUR-CODE-HERE)
+
+(define (longest-increasing-subsequence lst)
+    ; the following skeleton is optional, remove if you like
+    (if (null? lst)
+        nil
+        (begin
+            (define first (car lst))
+            (define rest (cdr lst))
+            (define large-values-rest
+                (larger-values first rest))
+            (define with-first
+                'YOUR-CODE-HERE)
+            (define without-first
+                'YOUR-CODE-HERE)
+            (if 'YOUR-CONDITION-HERE
+                with-first
+                without-first))))
+
 (define (cadr s) (car (cdr s)))
-(define (caddr s) (car (cdr (cdr s))))
+(define (caddr s) (cadr (cdr s)))
+
 
 ; derive returns the derivative of EXPR with respect to VAR
 (define (derive expr var)
@@ -27,8 +55,8 @@
         (else (list '+ a1 a2))))
 (define (sum? x)
   (and (list? x) (eq? (car x) '+)))
-(define (first-operand s) (cadr s))
-(define (second-operand s) (caddr s))
+(define (addend s) (cadr s))
+(define (augend s) (caddr s))
 
 ; Products are represented as lists that start with *.
 (define (make-product m1 m2)
@@ -39,10 +67,8 @@
         (else (list '* m1 m2))))
 (define (product? x)
   (and (list? x) (eq? (car x) '*)))
-; You can access the operands from the expressions with
-; first-operand and second-operand
-(define (first-operand p) (cadr p))
-(define (second-operand p) (caddr p))
+(define (multiplier p) (cadr p))
+(define (multiplicand p) (caddr p))
 
 (define (derive-sum expr var)
   'YOUR-CODE-HERE
@@ -57,6 +83,14 @@
   'YOUR-CODE-HERE
 )
 
+(define (base exp)
+  'YOUR-CODE-HERE
+)
+
+(define (exponent exp)
+  'YOUR-CODE-HERE
+)
+
 (define (exp? exp)
   'YOUR-CODE-HERE
 )
@@ -67,4 +101,3 @@
 (define (derive-exp exp var)
   'YOUR-CODE-HERE
 )
-

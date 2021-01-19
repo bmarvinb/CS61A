@@ -27,7 +27,7 @@ test = {
       ],
       'scored': True,
       'setup': r"""
-      scm> (load-all ".")
+      scm> (load 'hw08)
       scm> (define x^2 (make-exp 'x 2))
       scm> (define x^3 (make-exp 'x 3))
       """,

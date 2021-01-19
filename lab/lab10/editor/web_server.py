@@ -52,4 +52,3 @@ def handle(code, skip_tree, skip_envs, hide_return_frames):
 
     out = log.logger.export()
     return jsonify(out)
-

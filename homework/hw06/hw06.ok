@@ -1,25 +1,23 @@
 {
     "name": "Homework 6",
-    "endpoint": "cal/cs61a/fa20/hw06",
+    "endpoint": "cal/cs61a/sp19/hw06",
     "src": [
-        "hw06.py",
-        "hw06.scm"
+        "hw06.py"
     ],
     "tests": {
-        "hw*.py": "doctest",
-        "tests/*.py": "ok_test"
+        "hw06.py": "doctest"
     },
     "default_tests": [
-        "cadr-caddr",
-        "sign",
-        "pow"
+        "Fib",
+        "VendingMachine",
+        "survey"
     ],
     "protocols": [
         "restore",
         "file_contents",
+        "unlock",
         "grading",
         "analytics",
-        "unlock",
         "backup"
     ]
 }

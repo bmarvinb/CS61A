@@ -1,17 +1,19 @@
 {
     "name": "Homework 5",
-    "endpoint": "cal/cs61a/fa20/hw05",
+    "endpoint": "cal/cs61a/sp19/hw05",
     "src": [
         "hw05.py"
     ],
     "tests": {
-        "hw*.py": "doctest",
-        "tests/*.py": "ok_test"
+        "hw05.py": "doctest"
     },
     "default_tests": [
-        "VendingMachine",
-        "Mint",
-        "store_digits"
+        "make_counter",
+        "make_fib",
+        "make_withdraw",
+        "make_joint",
+        "preorder",
+        "Mint"
     ],
     "protocols": [
         "restore",

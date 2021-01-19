@@ -1,18 +1,21 @@
 {
     "name": "Lab 11",
-    "endpoint": "cal/cs61a/fa20/lab11",
+    "endpoint": "cal/cs61a/sp19/lab11",
     "src": [
-        "expr.py",
-        "repl.py"
+        "lab11.scm"
     ],
     "tests": {
-        "*.py": "doctest",
-        "tests/*.py": "ok_test"
+        "tests/wwsd-macros.py": "ok_test",
+        "tests/wwsd-quasiquote.py": "ok_test",
+        "tests/scheme-def.py": "ok_test",
+        "tests/or-macro.py": "ok_test",
+        "tests/dragon.py": "ok_test"
     },
     "default_tests": [
-        "prologue_reader",
-        "Name.eval",
-        "CallExpr.eval"
+        "wwsd-macros",
+        "wwsd-quasiquote",
+        "scheme-def",
+        "or-macro"
     ],
     "protocols": [
         "restore",

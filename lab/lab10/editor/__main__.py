@@ -17,7 +17,8 @@ def reformat_files(src, dest=None):
     exit()
 
 
-parser = argparse.ArgumentParser(description="CS61A Scheme Editor - Spring 2019")
+parser = argparse.ArgumentParser(
+    description="CS61A Scheme Editor - Spring 2019")
 
 parser.add_argument("-f", "--files",
                     type=argparse.FileType('r+'),
@@ -56,8 +57,10 @@ if args.files is not None:
 else:
     file_names = []
     if len(configs) > 1:
-        parser.error("Multiple okpy configs detected, files to be tested must be specified explicitly.")
+        parser.error(
+            "Multiple okpy configs detected, files to be tested must be specified explicitly.")
     elif len(configs) > 0:
         with open(configs[0]) as f:
-            file_names = [name for name in json.loads(f.read())["src"] if name.endswith(".scm")]
+            file_names = [name for name in json.loads(
+                f.read())["src"] if name.endswith(".scm")]
 local_server.start(file_names, args.port, not args.nobrowser)

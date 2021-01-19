@@ -165,11 +165,14 @@ def process(output, success):
     result = "\n".join(lines[start_idx:])
     if not success:
         try:
-            expected_index = next(idx for idx, line in enumerate(lines) if "# Error: expected" in line)
-            but_got_idx = next(idx for idx, line in enumerate(lines) if "# but got" in line)
+            expected_index = next(idx for idx, line in enumerate(
+                lines) if "# Error: expected" in line)
+            but_got_idx = next(idx for idx, line in enumerate(
+                lines) if "# but got" in line)
         except StopIteration:
             breakpoint()
-        expected = remove_comments_and_combine(lines[expected_index + 1:but_got_idx])
+        expected = remove_comments_and_combine(
+            lines[expected_index + 1:but_got_idx])
         actual = remove_comments_and_combine(lines[but_got_idx + 1:])
         actual = re.sub(r"Traceback.*\n\.\.\.\n(.*)", r"\1", actual)
         if re.match("[0-9a-f]{32}", expected):  # looks like a hash
@@ -183,7 +186,8 @@ def process(output, success):
 
 
 def process_case(case):
-    setup_success, setup_out = capture_output(case.console, case.setup.splitlines())
+    setup_success, setup_out = capture_output(
+        case.console, case.setup.splitlines())
     setup_out = "".join(setup_out)
     if not setup_success:
         return TestCaseResult(setup_success, [], process(setup_out, True))
@@ -210,10 +214,12 @@ def redirect_descriptor(from_, to):  # https://stackoverflow.com/a/22434262
     with os.fdopen(os.dup(fd), 'wb') as copied:
         from_.flush()
         os.dup2(to.fileno(), fd)
-        try: yield from_
+        try:
+            yield from_
         finally:
             from_.flush()
             os.dup2(copied.fileno(), fd)
+
 
 def run_tests():
     reload_tests()
@@ -233,8 +239,6 @@ def run_tests():
     from client.sources.ok_test.scheme import SchemeSuite
     # noinspection PyUnresolvedReferences
     from client.sources.doctest.models import Doctest
-    # noinspection PyUnresolvedReferences
-    from client.sources.scheme_test.models import SchemeTest
     log.setLevel(logging.ERROR)
 
     args = parse_input(["--all", "--verbose"])
@@ -244,7 +248,7 @@ def run_tests():
     try:
         result = []
         for test in assign.specified_tests:
-            if isinstance(test, (Doctest, SchemeTest)):
+            if isinstance(test, Doctest):
                 # doctests are python
                 continue
             suites = []
@@ -252,7 +256,8 @@ def run_tests():
                 if not isinstance(suite, SchemeSuite):
                     # python ok test
                     continue
-                suites.append([process_case(case).dictionary for case in suite.cases])
+                suites.append(
+                    [process_case(case).dictionary for case in suite.cases])
             if not suites:
                 continue
             result.append({
@@ -267,7 +272,8 @@ def run_tests():
 
 if __name__ == '__main__':
     output = None
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ok"))
+    sys.path.insert(0, os.path.join(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))), "ok"))
     try:
         output = run_tests()
     finally:

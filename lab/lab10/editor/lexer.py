@@ -37,7 +37,8 @@ class TokenBuffer:
 
     def get_next_token(self) -> Token:
         if self.done:
-            raise ParseError("Incomplete expression, probably due to unmatched parentheses.")
+            raise ParseError(
+                "Incomplete expression, probably due to unmatched parentheses.")
         return self.tokens[self.i]
 
     def pop_next_token(self) -> Token:
@@ -101,7 +102,8 @@ def tokenize(string, do_comments, ignore_brackets) -> List[Token]:
             if char == "\\":
                 curr += char
                 if i + 1 == len(string):
-                    raise ParseError("String not terminated correctly (try escaping the backslash?)")
+                    raise ParseError(
+                        "String not terminated correctly (try escaping the backslash?)")
                 curr += string[i + 1]
                 i += 2
             else:

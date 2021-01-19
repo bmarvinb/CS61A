@@ -18,10 +18,10 @@ test = {
           scm> x^2
           37c446142756e6233e39a8a175b02f82
           # locked
-          scm> (first-operand x^2)
+          scm> (base x^2)
           36e066bfc6378b709f8c41ed98771eb2
           # locked
-          scm> (second-operand x^2)
+          scm> (exponent x^2)
           bec7b0c91bdcb548cda9e9f3546cf0d7
           # locked
           scm> (exp? x^2) ; #t or #f
@@ -40,7 +40,7 @@ test = {
       ],
       'scored': True,
       'setup': r"""
-      scm> (load-all ".")
+      scm> (load 'hw08)
       scm> (define x^2 (make-exp 'x 2))
       scm> (define x^3 (make-exp 'x 3))
       """,
