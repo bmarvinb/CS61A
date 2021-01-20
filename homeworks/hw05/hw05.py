@@ -49,7 +49,28 @@ def make_fib():
     >>> fib() + sum([fib2() for _ in range(5)])
     12
     """
-    "*** YOUR CODE HERE ***"
+    n = 0
+    m = 1
+    i = 0
+
+    def fib():
+        nonlocal n
+        nonlocal m
+        nonlocal i
+
+        if i == 0:
+            i += 1
+            return 0
+        elif i == 1:
+            i += 1
+            return 1
+        else:
+            fib = n + m
+            n = m
+            m = fib
+            return fib
+
+    return fib
 
 
 def make_withdraw(balance, password):
