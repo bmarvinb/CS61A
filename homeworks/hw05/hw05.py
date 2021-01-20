@@ -18,7 +18,17 @@ def make_counter():
     >>> c('b') + c2('b')
     5
     """
-    "*** YOUR CODE HERE ***"
+    chars = {}
+
+    def counter(char):
+        if char in chars:
+            chars[char] = chars[char] + 1
+        else:
+            chars[char] = 1
+        return chars[char]
+
+    return counter
+
 
 def make_fib():
     """Returns a function that returns the next Fibonacci number
@@ -40,6 +50,7 @@ def make_fib():
     12
     """
     "*** YOUR CODE HERE ***"
+
 
 def make_withdraw(balance, password):
     """Return a password-protected withdraw function.
@@ -70,6 +81,7 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
+
 
 def make_joint(withdraw, old_password, new_password):
     """Return a password-protected withdraw function that has joint access to
@@ -111,6 +123,7 @@ def make_joint(withdraw, old_password, new_password):
     """
     "*** YOUR CODE HERE ***"
 
+
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
     would be visited by a preorder traversal (see problem description).
@@ -122,6 +135,7 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+
 
 class Mint:
     """A mint creates coins by stamping on years.
@@ -164,6 +178,7 @@ class Mint:
     def update(self):
         "*** YOUR CODE HERE ***"
 
+
 class Coin:
     def __init__(self, year):
         self.year = year
@@ -171,13 +186,16 @@ class Coin:
     def worth(self):
         "*** YOUR CODE HERE ***"
 
+
 class Nickel(Coin):
     cents = 5
+
 
 class Dime(Coin):
     cents = 10
 
 ## Tree ADT ##
+
 
 def tree(label, branches=[]):
     """Construct a tree with the given label value and a list of branches."""
@@ -185,13 +203,16 @@ def tree(label, branches=[]):
         assert is_tree(branch), 'branches must be trees'
     return [label] + list(branches)
 
+
 def label(tree):
     """Return the label value of a tree."""
     return tree[0]
 
+
 def branches(tree):
     """Return the list of branches of the given tree."""
     return tree[1:]
+
 
 def is_tree(tree):
     """Returns True if the given tree is a tree, and False otherwise."""
@@ -202,11 +223,13 @@ def is_tree(tree):
             return False
     return True
 
+
 def is_leaf(tree):
     """Returns True if the given tree's list of branches is empty, and False
     otherwise.
     """
     return not branches(tree)
+
 
 def print_tree(t, indent=0):
     """Print a representation of this tree in which each node is
@@ -230,6 +253,7 @@ def print_tree(t, indent=0):
     print('  ' * indent + str(label(t)))
     for b in branches(t):
         print_tree(b, indent + 1)
+
 
 def copy_tree(t):
     """Returns a copy of t. Only for testing purposes.
