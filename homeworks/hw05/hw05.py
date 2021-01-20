@@ -101,7 +101,26 @@ def make_withdraw(balance, password):
     >>> type(w(10, 'l33t')) == str
     True
     """
-    "*** YOUR CODE HERE ***"
+    saved_password = password
+    saved_balance = balance
+    wrong_attempts = []
+
+    def withdraw(a, p):
+        nonlocal saved_balance
+        nonlocal wrong_attempts
+
+        if len(wrong_attempts) == 3:
+            return 'Your account is locked. Attempts: %s' % wrong_attempts
+        elif saved_password != p:
+            wrong_attempts.append(p)
+            return 'Incorrect password'
+        elif saved_balance - a < 0:
+            return 'Insufficient funds'
+
+        saved_balance = saved_balance - a
+        return saved_balance
+
+    return withdraw
 
 
 def make_joint(withdraw, old_password, new_password):
