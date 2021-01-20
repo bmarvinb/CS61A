@@ -159,7 +159,16 @@ def make_joint(withdraw, old_password, new_password):
     >>> make_joint(w, 'hax0r', 'hello')
     "Your account is locked. Attempts: ['my', 'secret', 'password']"
     """
-    "*** YOUR CODE HERE ***"
+    test = withdraw(0, old_password)
+    if type(test) == str:
+        return test
+
+    def joint_withdraw(a, p):
+        if p == old_password or p == new_password:
+            return withdraw(a, old_password)
+        return withdraw(a, p)
+
+    return joint_withdraw
 
 
 def preorder(t):
