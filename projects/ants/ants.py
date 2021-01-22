@@ -166,6 +166,8 @@ class ThrowerAnt(Ant):
     implemented = True
     damage = 1
     food_cost = 3
+    min_range = 0
+    max_range = float('inf')
 
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
 
@@ -175,19 +177,19 @@ class ThrowerAnt(Ant):
 
         This method returns None if there is no such Bee (or none in range).
         """
-        # BEGIN Problem 3 and 4
-        place = self.place
-        bees = place.bees
-        transition = 0
 
-        while not len(bees) and place.entrance != beehive:
-            place = place.entrance
-            bees = place.bees
-            transition += 1
+        def get_nearest_bee(place, transition=0):
+            if place is beehive:
+                return None
 
-        if transition <= 8:
-            return rANTdom_else_none(bees)
-        # END Problem 3 and 4
+            bee = rANTdom_else_none(place.bees)
+
+            if bee and self.min_range <= transition <= self.max_range:
+                return bee
+            else:
+                return get_nearest_bee(place.entrance, transition + 1)
+
+        return get_nearest_bee(self.place)
 
     def throw_at(self, target):
         """Throw a leaf at the TARGET Bee, reducing its armor."""
@@ -213,24 +215,18 @@ def rANTdom_else_none(s):
 
 class ShortThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees at most 3 places away."""
-
     name = 'Short'
     food_cost = 2
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 4
-    implemented = False  # Change to True to view in the GUI
-    # END Problem 4
+    max_range = 3
+    implemented = True
 
 
 class LongThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees at least 5 places away."""
-
     name = 'Long'
     food_cost = 2
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 4
-    implemented = False  # Change to True to view in the GUI
-    # END Problem 4
+    min_range = 5
+    implemented = True
 
 
 class FireAnt(Ant):
@@ -885,16 +881,3 @@ class AssaultPlan(dict):
         return [bee for wave in self.values() for bee in wave]
 
 
-# beehive, layout = Hive(AssaultPlan()), dry_layout
-# dimensions = (1, 9)
-# gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
-# thrower = ThrowerAnt()
-# ant_place = gamestate.places["tunnel_0_0"]
-# ant_place.add_insect(thrower)
-# near_bee = Bee(2)  # A Bee with 2 armor
-# far_bee = Bee(3)  # A Bee with 3 armor
-# near_place = gamestate.places['tunnel_0_3']
-# far_place = gamestate.places['tunnel_0_6']
-# near_place.add_insect(near_bee)
-# far_place.add_insect(far_bee)
-# nearest_bee = thrower.nearest_bee(gamestate.beehive)
