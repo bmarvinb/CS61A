@@ -69,7 +69,7 @@ class Insect:
         3
         """
         self.armor -= amount
-        if self.armor <= 0:
+        if self.armor < 9:
             self.place.remove_insect(self)
             self.death_callback()
 
@@ -176,7 +176,17 @@ class ThrowerAnt(Ant):
         This method returns None if there is no such Bee (or none in range).
         """
         # BEGIN Problem 3 and 4
-        return rANTdom_else_none(self.place.bees)  # REPLACE THIS LINE
+        place = self.place
+        bees = place.bees
+        transition = 0
+
+        while not len(bees) and place.entrance != beehive:
+            place = place.entrance
+            bees = place.bees
+            transition += 1
+
+        if transition <= 8:
+            return rANTdom_else_none(bees)
         # END Problem 3 and 4
 
     def throw_at(self, target):
@@ -191,7 +201,8 @@ class ThrowerAnt(Ant):
 
 def rANTdom_else_none(s):
     """Return a random element of sequence S, or return None if S is empty."""
-    assert isinstance(s, list), "rANTdom_else_none's argument should be a list but was a %s" % type(s).__name__
+    assert isinstance(
+        s, list), "rANTdom_else_none's argument should be a list but was a %s" % type(s).__name__
     if s:
         return random.choice(s)
 
@@ -701,7 +712,8 @@ class GameState:
                 self.bee_entrances.append(place)
 
         register_place(self.beehive, False)
-        create_places(self.base, register_place, self.dimensions[0], self.dimensions[1])
+        create_places(self.base, register_place,
+                      self.dimensions[0], self.dimensions[1])
 
     def simulate(self):
         """Simulate an attack on the ant colony (i.e., play the game)."""
@@ -871,3 +883,18 @@ class AssaultPlan(dict):
     def all_bees(self):
         """Place all Bees in the beehive and return the list of Bees."""
         return [bee for wave in self.values() for bee in wave]
+
+
+# beehive, layout = Hive(AssaultPlan()), dry_layout
+# dimensions = (1, 9)
+# gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
+# thrower = ThrowerAnt()
+# ant_place = gamestate.places["tunnel_0_0"]
+# ant_place.add_insect(thrower)
+# near_bee = Bee(2)  # A Bee with 2 armor
+# far_bee = Bee(3)  # A Bee with 3 armor
+# near_place = gamestate.places['tunnel_0_3']
+# far_place = gamestate.places['tunnel_0_6']
+# near_place.add_insect(near_bee)
+# far_place.add_insect(far_bee)
+# nearest_bee = thrower.nearest_bee(gamestate.beehive)
