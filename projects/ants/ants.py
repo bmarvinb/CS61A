@@ -69,7 +69,7 @@ class Insect:
         3
         """
         self.armor -= amount
-        if self.armor < 9:
+        if self.armor <= 0:
             self.place.remove_insect(self)
             self.death_callback()
 
@@ -231,15 +231,10 @@ class LongThrower(ThrowerAnt):
 
 class FireAnt(Ant):
     """FireAnt cooks any Bee in its Place when it expires."""
-
     name = 'Fire'
     damage = 3
     food_cost = 5
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 5
-    implemented = False  # Change to True to view in the GUI
-
-    # END Problem 5
+    implemented = True
 
     def __init__(self, armor=3):
         """Create an Ant with an ARMOR quantity."""
@@ -252,9 +247,10 @@ class FireAnt(Ant):
         Make sure to damage each bee in the current place, and apply the bonus
         if the fire ant dies.
         """
-        # BEGIN Problem 5
-        "*** YOUR CODE HERE ***"
-        # END Problem 5
+        for bee in self.place.bees[:]:
+            damage = self.damage + 1 if self.armor - amount <= 0 else bee.damage
+            bee.reduce_armor(damage)
+        Ant.reduce_armor(self, amount)
 
 
 class HungryAnt(Ant):
@@ -880,4 +876,16 @@ class AssaultPlan(dict):
         """Place all Bees in the beehive and return the list of Bees."""
         return [bee for wave in self.values() for bee in wave]
 
+beehive, layout = Hive(AssaultPlan()), dry_layout
+dimensions = (1, 9)
+gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
+# General FireAnt Test
+place = gamestate.places['tunnel_0_4']
+bee = Bee(10)
+ant = FireAnt()
+place.add_insect(bee)
+place.add_insect(ant)
+ant.reduce_armor(0.1) # Poke the FireAnt
+# bee.armor             # Bee should only get slightly damaged
+# 10
 
