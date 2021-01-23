@@ -259,26 +259,27 @@ class HungryAnt(Ant):
     """
     name = 'Hungry'
     food_cost = 4
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 6
-    implemented = False  # Change to True to view in the GUI
-
-    # END Problem 6
+    implemented = True
+    time_to_digest = 3
 
     def __init__(self, armor=1):
-        # BEGIN Problem 6
-        "*** YOUR CODE HERE ***"
-        # END Problem 6
+        super(HungryAnt, self).__init__(armor)
+        self.digesting = 0
+
 
     def eat_bee(self, bee):
-        # BEGIN Problem 6
-        "*** YOUR CODE HERE ***"
-        # END Problem 6
+        bee.reduce_armor(bee.armor)
 
     def action(self, gamestate):
-        # BEGIN Problem 6
-        "*** YOUR CODE HERE ***"
-        # END Problem 6
+        if self.digesting:
+            self.digesting -= 1
+        else:
+            if self.place.bees:
+                bee = random.choice(self.place.bees)
+                self.eat_bee(bee)
+                self.digesting = self.time_to_digest
+
+
 
 
 # BEGIN Problem 7
@@ -875,17 +876,3 @@ class AssaultPlan(dict):
     def all_bees(self):
         """Place all Bees in the beehive and return the list of Bees."""
         return [bee for wave in self.values() for bee in wave]
-
-beehive, layout = Hive(AssaultPlan()), dry_layout
-dimensions = (1, 9)
-gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
-# General FireAnt Test
-place = gamestate.places['tunnel_0_4']
-bee = Bee(10)
-ant = FireAnt()
-place.add_insect(bee)
-place.add_insect(ant)
-ant.reduce_armor(0.1) # Poke the FireAnt
-# bee.armor             # Bee should only get slightly damaged
-# 10
-
