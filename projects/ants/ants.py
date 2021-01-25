@@ -105,8 +105,6 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     food_cost = 0
 
-    # ADD CLASS ATTRIBUTES HERE
-
     def __init__(self, armor=1):
         """Create an Ant with an ARMOR quantity."""
         Insect.__init__(self, armor)
@@ -124,9 +122,7 @@ class Ant(Insect):
         if place.ant is None:
             place.ant = self
         else:
-            # BEGIN Problem Optional 2
             assert place.ant is None, 'Two ants in {0}'.format(place)
-            # END Problem Optional 2
         Insect.add_to(self, place)
 
     def remove_from(self, place):
@@ -280,11 +276,14 @@ class HungryAnt(Ant):
                 self.digesting = self.time_to_digest
 
 
+class WallAnt(Ant):
+    name = 'Wall'
+    food_cost = 4
+    damage = 0
+    implemented = True
 
-
-# BEGIN Problem 7
-# The WallAnt class
-# END Problem 7
+    def __init__(self, armor=4):
+        Ant.__init__(self, armor)
 
 
 class Water(Place):
@@ -406,20 +405,14 @@ class NinjaAnt(Ant):
     """NinjaAnt does not block the path and damages all bees in its place.
     This class is optional.
     """
-
     name = 'Ninja'
     damage = 1
     food_cost = 5
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem Optional 1
-    implemented = False  # Change to True to view in the GUI
-
-    # END Problem Optional 1
+    implemented = True
 
     def action(self, gamestate):
-        # BEGIN Problem Optional 1
         "*** YOUR CODE HERE ***"
-        # END Problem Optional 1
+
 
 
 class ContainerAnt(Ant):
