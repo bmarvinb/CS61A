@@ -1,6 +1,6 @@
 test = {
   'name': 'Problem 4',
-  'points': 3,
+  'points': 2,
   'suites': [
     {
       'cases': [
@@ -96,9 +96,9 @@ test = {
           >>> # Test LongThrower Hit
           >>> ant = LongThrower()
           >>> in_range = Bee(2)
-          >>> gamestate.places['tunnel_0_0'].add_insect(ant)
-          >>> gamestate.places["tunnel_0_5"].add_insect(in_range)
-          >>> ant.action(gamestate)
+          >>> colony.places['tunnel_0_0'].add_insect(ant)
+          >>> colony.places["tunnel_0_5"].add_insect(in_range)
+          >>> ant.action(colony)
           >>> in_range.armor
           1
           """,
@@ -110,21 +110,11 @@ test = {
           >>> # Testing LongThrower miss
           >>> ant = LongThrower()
           >>> out_of_range = Bee(2)
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
-          >>> gamestate.places["tunnel_0_4"].add_insect(out_of_range)
-          >>> ant.action(gamestate)
+          >>> colony.places["tunnel_0_0"].add_insect(ant)
+          >>> colony.places["tunnel_0_4"].add_insect(out_of_range)
+          >>> ant.action(colony)
           >>> out_of_range.armor
           2
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Testing LongThrower miss next to the hive
-          >>> ant = LongThrower()
-          >>> gamestate.places["tunnel_0_4"].add_insect(ant)
-          >>> ant.action(gamestate) # should not error
           """,
           'hidden': False,
           'locked': False
@@ -135,10 +125,10 @@ test = {
           >>> ant = LongThrower()
           >>> out_of_range = Bee(2)
           >>> in_range = Bee(2)
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
-          >>> gamestate.places["tunnel_0_4"].add_insect(out_of_range)
-          >>> gamestate.places["tunnel_0_5"].add_insect(in_range)
-          >>> ant.action(gamestate)
+          >>> colony.places["tunnel_0_0"].add_insect(ant)
+          >>> colony.places["tunnel_0_4"].add_insect(out_of_range)
+          >>> colony.places["tunnel_0_5"].add_insect(in_range)
+          >>> ant.action(colony)
           >>> out_of_range.armor
           2
           >>> in_range.armor
@@ -152,9 +142,9 @@ test = {
           >>> # Test ShortThrower hit
           >>> ant = ShortThrower()
           >>> in_range = Bee(2)
-          >>> gamestate.places['tunnel_0_0'].add_insect(ant)
-          >>> gamestate.places["tunnel_0_3"].add_insect(in_range)
-          >>> ant.action(gamestate)
+          >>> colony.places['tunnel_0_0'].add_insect(ant)
+          >>> colony.places["tunnel_0_3"].add_insect(in_range)
+          >>> ant.action(colony)
           >>> in_range.armor
           1
           """,
@@ -166,9 +156,9 @@ test = {
           >>> # Testing ShortThrower miss
           >>> ant = ShortThrower()
           >>> out_of_range = Bee(2)
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
-          >>> gamestate.places["tunnel_0_4"].add_insect(out_of_range)
-          >>> ant.action(gamestate)
+          >>> colony.places["tunnel_0_0"].add_insect(ant)
+          >>> colony.places["tunnel_0_4"].add_insect(out_of_range)
+          >>> ant.action(colony)
           >>> out_of_range.armor
           2
           """,
@@ -179,12 +169,12 @@ test = {
           'code': r"""
           >>> # Testing LongThrower ignores bees outside range
           >>> thrower = LongThrower()
-          >>> gamestate.places["tunnel_0_0"].add_insect(thrower)
+          >>> colony.places["tunnel_0_0"].add_insect(thrower)
           >>> bee1 = Bee(1001)
           >>> bee2 = Bee(1001)
-          >>> gamestate.places["tunnel_0_4"].add_insect(bee1)
-          >>> gamestate.places["tunnel_0_5"].add_insect(bee2)
-          >>> thrower.action(gamestate)
+          >>> colony.places["tunnel_0_4"].add_insect(bee1)
+          >>> colony.places["tunnel_0_5"].add_insect(bee2)
+          >>> thrower.action(colony)
           >>> bee1.armor
           1001
           >>> bee2.armor
@@ -197,12 +187,12 @@ test = {
           'code': r"""
           >>> # Testing LongThrower attacks nearest bee in range
           >>> thrower = LongThrower()
-          >>> gamestate.places["tunnel_0_0"].add_insect(thrower)
+          >>> colony.places["tunnel_0_0"].add_insect(thrower)
           >>> bee1 = Bee(1001)
           >>> bee2 = Bee(1001)
-          >>> gamestate.places["tunnel_0_5"].add_insect(bee1)
-          >>> gamestate.places["tunnel_0_6"].add_insect(bee2)
-          >>> thrower.action(gamestate)
+          >>> colony.places["tunnel_0_5"].add_insect(bee1)
+          >>> colony.places["tunnel_0_6"].add_insect(bee2)
+          >>> thrower.action(colony)
           >>> bee1.armor
           1000
           >>> bee2.armor
@@ -213,40 +203,15 @@ test = {
         },
         {
           'code': r"""
-          >>> # Testing case when min_range of LongThrower is outside of the tunnel
-          >>> bee = Bee(2)
-          >>> ant = LongThrower()
-          >>> gamestate.places["tunnel_0_6"].add_insect(ant)
-          >>> gamestate.places["tunnel_0_7"].add_insect(bee)
-          >>> ant.action(gamestate)
-          >>> bee.armor
-          2
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
           >>> # Testing if max_range is looked up in the instance
-          >>> # and check that the code isnt dependent on the ants name
           >>> ant = ShortThrower()
-          >>> ant.name = 'short2'
           >>> ant.max_range = 10   # Buff the ant's range
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
+          >>> colony.places["tunnel_0_0"].add_insect(ant)
           >>> bee = Bee(2)
-          >>> gamestate.places["tunnel_0_6"].add_insect(bee)
-          >>> ant.action(gamestate)
+          >>> colony.places["tunnel_0_6"].add_insect(bee)
+          >>> ant.action(colony)
           >>> bee.armor
           1
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Testing there is no new nearest_bee function in ShortThrower / LongThrower
-          >>> assert ShortThrower.nearest_bee is ThrowerAnt.nearest_bee
-          >>> assert LongThrower.nearest_bee is ThrowerAnt.nearest_bee
           """,
           'hidden': False,
           'locked': False
@@ -255,9 +220,9 @@ test = {
       'scored': True,
       'setup': r"""
       >>> from ants import *
-      >>> beehive, layout = Hive(AssaultPlan()), dry_layout
+      >>> hive, layout = Hive(AssaultPlan()), dry_layout
       >>> dimensions = (1, 9)
-      >>> gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
+      >>> colony = AntColony(None, hive, ant_types(), layout, dimensions)
       >>> #
       """,
       'teardown': '',
@@ -269,10 +234,10 @@ test = {
           'code': r"""
           >>> # Testing if min_range is set appropriately in ThrowerAnt
           >>> ant = ThrowerAnt()
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
+          >>> colony.places["tunnel_0_0"].add_insect(ant)
           >>> bee = Bee(2)
-          >>> gamestate.places["tunnel_0_0"].add_insect(bee)
-          >>> ant.action(gamestate)
+          >>> colony.places["tunnel_0_0"].add_insect(bee)
+          >>> ant.action(colony)
           >>> bee.armor
           1
           """,
@@ -283,60 +248,12 @@ test = {
           'code': r"""
           >>> # Testing if max_range is set appropriately in ThrowerAnt
           >>> ant = ThrowerAnt()
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
+          >>> colony.places["tunnel_0_0"].add_insect(ant)
           >>> bee = Bee(2)
-          >>> gamestate.places["tunnel_0_99"].add_insect(bee)
-          >>> ant.action(gamestate)
+          >>> colony.places["tunnel_0_99"].add_insect(bee)
+          >>> ant.action(colony)
           >>> bee.armor
           1
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Special thrower class that just hits things 6 away
-          >>> class JustSixThrower(ThrowerAnt):
-          ...   min_range = max_range = 6
-          >>> ant = JustSixThrower()
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
-          >>> exact_bee = Bee(2)
-          >>> gamestate.places["tunnel_0_6"].add_insect(exact_bee)
-          >>> ant.action(gamestate)
-          >>> exact_bee.armor
-          1
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Special thrower class that just hits things 6 away
-          >>> class JustSixThrower(ThrowerAnt):
-          ...   min_range = max_range = 6
-          >>> ant = JustSixThrower()
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
-          >>> close_bee = Bee(2)
-          >>> gamestate.places["tunnel_0_5"].add_insect(close_bee)
-          >>> ant.action(gamestate)
-          >>> close_bee.armor
-          2
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Special thrower class that just hits things 6 away
-          >>> class JustSixThrower(ThrowerAnt):
-          ...   min_range = max_range = 6
-          >>> ant = JustSixThrower()
-          >>> gamestate.places["tunnel_0_0"].add_insect(ant)
-          >>> far_bee = Bee(2)
-          >>> gamestate.places["tunnel_0_7"].add_insect(far_bee)
-          >>> ant.action(gamestate)
-          >>> far_bee.armor
-          2
           """,
           'hidden': False,
           'locked': False
@@ -345,9 +262,9 @@ test = {
       'scored': True,
       'setup': r"""
       >>> from ants import *
-      >>> beehive, layout = Hive(AssaultPlan()), dry_layout
+      >>> hive, layout = Hive(AssaultPlan()), dry_layout
       >>> dimensions = (1, 100)
-      >>> gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
+      >>> colony = AntColony(None, hive, ant_types(), layout, dimensions)
       >>> #
       """,
       'teardown': '',
@@ -358,7 +275,7 @@ test = {
         {
           'code': r"""
           >>> # Testing LongThrower Inheritance from ThrowerAnt
-          >>> def new_action(self, gamestate):
+          >>> def new_action(self, colony):
           ...     raise NotImplementedError()
           >>> def new_throw_at(self, target):
           ...     raise NotImplementedError()
@@ -369,7 +286,7 @@ test = {
           >>> test_long = LongThrower()
           >>> passed = 0
           >>> try:
-          ...     test_long.action(gamestate)
+          ...     test_long.action(colony)
           ... except NotImplementedError:
           ...     passed += 1
           >>> ThrowerAnt.action = old_thrower_action
@@ -389,7 +306,7 @@ test = {
         {
           'code': r"""
           >>> # Testing ShortThrower Inheritance from ThrowerAnt
-          >>> def new_action(self, gamestate):
+          >>> def new_action(self, colony):
           ...     raise NotImplementedError()
           >>> def new_throw_at(self, target):
           ...     raise NotImplementedError()
@@ -400,7 +317,7 @@ test = {
           >>> test_short = ShortThrower()
           >>> passed = 0
           >>> try:
-          ...     test_short.action(gamestate)
+          ...     test_short.action(colony)
           ... except NotImplementedError:
           ...     passed += 1
           
@@ -423,34 +340,15 @@ test = {
       'scored': True,
       'setup': r"""
       >>> from ants import *
-      >>> beehive, layout = Hive(AssaultPlan()), dry_layout
+      >>> hive, layout = Hive(AssaultPlan()), dry_layout
       >>> dimensions = (1, 9)
-      >>> gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
+      >>> colony = AntColony(None, hive, ant_types(), layout, dimensions)
       >>> #
       """,
       'teardown': r"""
       >>> ThrowerAnt.action = old_thrower_action
       >>> ThrowerAnt.throw_at = old_throw_at
       """,
-      'type': 'doctest'
-    },
-    {
-      'cases': [
-        {
-          'code': r"""
-          >>> from ants import *
-          >>> LongThrower.implemented
-          True
-          >>> ShortThrower.implemented
-          True
-          """,
-          'hidden': False,
-          'locked': False
-        }
-      ],
-      'scored': True,
-      'setup': '',
-      'teardown': '',
       'type': 'doctest'
     }
   ]

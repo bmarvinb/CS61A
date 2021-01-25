@@ -7,7 +7,13 @@ import numbers
 import operator
 import sys
 from scheme_reader import Pair, nil, repl_str
+import scheme
 
+try:
+    import turtle
+    import tkinter
+except:
+    print("warning: could not import the turtle module.", file=sys.stderr)
 
 class SchemeError(Exception):
     """Exception indicating an error in a Scheme program."""
@@ -28,37 +34,34 @@ def builtin(*names):
         return fn
     return add
 
-def validate_type(val, predicate, k, name):
+def check_type(val, predicate, k, name):
     """Returns VAL.  Raises a SchemeError if not PREDICATE(VAL)
     using "argument K of NAME" to describe the offending value."""
     if not predicate(val):
         msg = "argument {0} of {1} has wrong type ({2})"
-        type_name = type(val).__name__
-        if scheme_symbolp(val):
-            type_name = "symbol"
-        raise SchemeError(msg.format(k, name, type_name))
+        raise SchemeError(msg.format(k, name, type(val).__name__))
     return val
 
 @builtin("boolean?")
 def scheme_booleanp(x):
     return x is True or x is False
 
-def is_true_primitive(val):
+def scheme_truep(val):
     """All values in Scheme are true except False."""
     return val is not False
 
-def is_false_primitive(val):
-    """Only False is false in scheme_reader."""
+def scheme_falsep(val):
+    """Only False is false in Scheme."""
     return val is False
 
 @builtin("not")
 def scheme_not(x):
-    return not is_true_primitive(x)
+    return not scheme_truep(x)
 
 @builtin("equal?")
 def scheme_equalp(x, y):
     if scheme_pairp(x) and scheme_pairp(y):
-        return scheme_equalp(x.first, y.first) and scheme_equalp(x.rest, y.rest)
+        return scheme_equalp(x.first, y.first) and scheme_equalp(x.second, y.second)
     elif scheme_numberp(x) and scheme_numberp(y):
         return x == y
     else:
@@ -75,7 +78,7 @@ def scheme_eqp(x, y):
 
 @builtin("pair?")
 def scheme_pairp(x):
-    return type(x).__name__ == 'Pair'
+    return isinstance(x, Pair)
 
 @builtin("scheme-valid-cdr?")
 def scheme_valid_cdrp(x):
@@ -88,17 +91,17 @@ def scheme_promisep(x):
 
 @builtin("force")
 def scheme_force(x):
-    validate_type(x, scheme_promisep, 0, 'promise')
+    check_type(x, scheme_promisep, 0, 'promise')
     return x.evaluate()
 
 @builtin("cdr-stream")
 def scheme_cdr_stream(x):
-    validate_type(x, lambda x: scheme_pairp(x) and scheme_promisep(x.rest), 0, 'cdr-stream')
-    return scheme_force(x.rest)
+    check_type(x, lambda x: scheme_pairp(x) and scheme_promisep(x.second), 0, 'cdr-stream')
+    return scheme_force(x.second)
 
 @builtin("null?")
 def scheme_nullp(x):
-    return type(x).__name__ == 'nil'
+    return x is nil
 
 @builtin("list?")
 def scheme_listp(x):
@@ -106,12 +109,12 @@ def scheme_listp(x):
     while x is not nil:
         if not isinstance(x, Pair):
             return False
-        x = x.rest
+        x = x.second
     return True
 
 @builtin("length")
 def scheme_length(x):
-    validate_type(x, scheme_listp, 0, 'length')
+    check_type(x, scheme_listp, 0, 'length')
     if x is nil:
         return 0
     return len(x)
@@ -122,25 +125,25 @@ def scheme_cons(x, y):
 
 @builtin("car")
 def scheme_car(x):
-    validate_type(x, scheme_pairp, 0, 'car')
+    check_type(x, scheme_pairp, 0, 'car')
     return x.first
 
 @builtin("cdr")
 def scheme_cdr(x):
-    validate_type(x, scheme_pairp, 0, 'cdr')
-    return x.rest
+    check_type(x, scheme_pairp, 0, 'cdr')
+    return x.second
 
 # Mutation extras
 @builtin("set-car!")
-def scheme_set_car(x, y):
-    validate_type(x, scheme_pairp, 0, 'set-car!')
+def scheme_car(x, y):
+    check_type(x, scheme_pairp, 0, 'set-car!')
     x.first = y
 
 @builtin("set-cdr!")
-def scheme_set_cdr(x, y):
-    validate_type(x, scheme_pairp, 0, 'set-cdr!')
-    validate_type(y, scheme_valid_cdrp, 1, 'set-cdr!')
-    x.rest = y
+def scheme_cdr(x, y):
+    check_type(x, scheme_pairp, 0, 'set-cdr!')
+    check_type(y, scheme_valid_cdrp, 1, 'set-cdr!')
+    x.second = y
 
 @builtin("list")
 def scheme_list(*vals):
@@ -157,13 +160,13 @@ def scheme_append(*vals):
     for i in range(len(vals)-2, -1, -1):
         v = vals[i]
         if v is not nil:
-            validate_type(v, scheme_pairp, i, 'append')
+            check_type(v, scheme_pairp, i, 'append')
             r = p = Pair(v.first, result)
-            v = v.rest
+            v = v.second
             while scheme_pairp(v):
-                p.rest = Pair(v.first, result)
-                p = p.rest
-                v = v.rest
+                p.second = Pair(v.first, result)
+                p = p.second
+                v = v.second
             result = r
     return result
 
@@ -198,13 +201,9 @@ def _arith(fn, init, vals):
     s = init
     for val in vals:
         s = fn(s, val)
-    s = _ensure_int(s)
+    if int(s) == s:
+        s = int(s)
     return s
-
-def _ensure_int(x):
-    if int(x) == x:
-        x = int(x)
-    return x
 
 @builtin("+")
 def scheme_add(*vals):
@@ -214,7 +213,7 @@ def scheme_add(*vals):
 def scheme_sub(val0, *vals):
     _check_nums(val0, *vals) # fixes off-by-one error
     if len(vals) == 0:
-        return _ensure_int(-val0)
+        return -val0
     return _arith(operator.sub, val0, vals)
 
 @builtin("*")
@@ -226,7 +225,7 @@ def scheme_div(val0, *vals):
     _check_nums(val0, *vals) # fixes off-by-one error
     try:
         if len(vals) == 0:
-            return _ensure_int(operator.truediv(1, val0))
+            return operator.truediv(1, val0)
         return _arith(operator.truediv, val0, vals)
     except ZeroDivisionError as err:
         raise SchemeError(err)
@@ -333,19 +332,14 @@ def scheme_atomp(x):
             scheme_nullp(x) or scheme_stringp(x))
 
 @builtin("display")
-def scheme_display(*vals):
-    vals = [repl_str(eval(val) if scheme_stringp(val) else val) for val in vals]
-    print(*vals, end="")
+def scheme_display(val):
+    if scheme_stringp(val):
+        val = eval(val)
+    print(repl_str(val), end="")
 
 @builtin("print")
-def scheme_print(*vals):
-    vals = [repl_str(val) for val in vals]
-    print(*vals)
-
-@builtin("displayln")
-def scheme_displayln(*vals):
-    scheme_display(*vals)
-    scheme_newline()
+def scheme_print(val):
+    print(repl_str(val))
 
 @builtin("newline")
 def scheme_newline():
@@ -361,66 +355,29 @@ def scheme_error(msg=None):
 def scheme_exit():
     raise EOFError
 
+#Only for use in Scheme project
+@builtin("print-then-return")
+def scheme_print_return(val1, val2):
+    print(repl_str(val1))
+    return val2
+
+
+
 ##
 ## Turtle graphics (non-standard)
 ##
 
-turtle = CANVAS = None
+_turtle_screen_on = False
 
-def _title():
-    import turtle as _nativeturtle
-    _nativeturtle.title("Scheme Turtles")
-
-def attempt_install_tk_turtle():
-    try:
-        from abstract_turtle import turtle
-    except ImportError:
-        raise SchemeError("Could not find abstract_turtle. This should never happen in student-facing situations. If you are a student, please file a bug on Piazza.")
-    return turtle
-
-def attempt_create_tk_canvas():
-    try:
-        import tkinter as _
-    except:
-        raise SchemeError("\n".join([
-            "Could not import tkinter, so the tk-turtle will not work.",
-            "Either install python with tkinter support or run in pillow-turtle mode"
-        ]))
-    from abstract_turtle import TkCanvas
-    return TkCanvas(1000, 1000, init_hook=_title)
-
-def attempt_create_pillow_canvas():
-    try:
-        import PIL as _
-        import numpy as _
-    except:
-        raise SchemeError("\n".join([
-            "Could not import abstract_turtle[pillow_canvas]'s dependencies.",
-            "To install these packages, run",
-            "    python3 -m pip install 'abstract_turtle[pillow_canvas]'",
-            "You can also run in tk-turtle mode by removing the flag `--pillow-turtle`"
-        ]))
-    from abstract_turtle import PillowCanvas
-    return PillowCanvas(1000, 1000)
+def turtle_screen_on():
+    return _turtle_screen_on
 
 def _tscheme_prep():
-    global turtle, CANVAS
-    if turtle is not None:
-        return
-    _turtle = attempt_install_tk_turtle()
-    if builtins.TK_TURTLE:
-        try:
-            _CANVAS = attempt_create_tk_canvas()
-        except SchemeError as e:
-            print(e, file=sys.stderr)
-            print("Attempting pillow canvas mode", file=sys.stderr)
-            _CANVAS = attempt_create_pillow_canvas()
-    else:
-        _CANVAS = attempt_create_pillow_canvas()
-    turtle, CANVAS = _turtle, _CANVAS
-    turtle.set_canvas(CANVAS)
-    turtle.mode("logo")
-
+    global _turtle_screen_on
+    if not _turtle_screen_on:
+        _turtle_screen_on = True
+        turtle.title("Scheme Turtles")
+        turtle.mode('logo')
 
 @builtin("forward", "fd")
 def tscheme_forward(n):
@@ -514,7 +471,7 @@ def tscheme_color(c):
     """Set the color to C, a string such as '"red"' or '"#ffc0c0"' (representing
     hexadecimal red, green, and blue values."""
     _tscheme_prep()
-    validate_type(c, scheme_stringp, 0, "color")
+    check_type(c, scheme_stringp, 0, "color")
     turtle.color(eval(c))
 
 @builtin("rgb")
@@ -542,75 +499,60 @@ def tscheme_end_fill():
 @builtin("bgcolor")
 def tscheme_bgcolor(c):
     _tscheme_prep()
-    validate_type(c, scheme_stringp, 0, "bgcolor")
+    check_type(c, scheme_stringp, 0, "bgcolor")
     turtle.bgcolor(eval(c))
 
 @builtin("exitonclick")
 def tscheme_exitonclick():
-    global turtle
     """Wait for a click on the turtle window, and then close it."""
-    if turtle is None:
-        return
-    _tscheme_prep()
-    # BEGIN SOLUTION NO PROMPT ALT="if _turtle_screen_on:"
-    if builtins.TK_TURTLE:
+    global _turtle_screen_on
+    if _turtle_screen_on:
         print("Close or click on turtle window to complete exit")
-    if builtins.TURTLE_SAVE_PATH is not None:
-        _save(builtins.TURTLE_SAVE_PATH)
-    turtle.exitonclick()
-    turtle = None
+        turtle.exitonclick()
+        _turtle_screen_on = False
 
 @builtin("speed")
 def tscheme_speed(s):
     """Set the turtle's animation speed as indicated by S (an integer in
     0-10, with 0 indicating no animation (lines draw instantly), and 1-10
     indicating faster and faster movement."""
-    validate_type(s, scheme_integerp, 0, "speed")
+    check_type(s, scheme_integerp, 0, "speed")
     _tscheme_prep()
     turtle.speed(s)
 
 @builtin("pixel")
 def tscheme_pixel(x, y, c):
     """Draw a filled box of pixels (default 1 pixel) at (X, Y) in color C."""
-    validate_type(c, scheme_stringp, 0, "pixel")
+    check_type(c, scheme_stringp, 0, "pixel")
     color = eval(c)
-    _tscheme_prep()
-    turtle.pixel(x, y, color)
+    canvas = turtle.getcanvas()
+    w, h = canvas.winfo_width(), canvas.winfo_height()
+    if not hasattr(tscheme_pixel, 'image'):
+        _tscheme_prep()
+        tscheme_pixel.image = tkinter.PhotoImage(width=w, height=h)
+        canvas.create_image((0, 0), image=tscheme_pixel.image, state="normal")
+    size = tscheme_pixel.size
+    for dx in range(size):
+        for dy in range(size):
+            screenx, screeny = x * size + dx, h-(y * size + dy)
+            if 0 < screenx < w and 0 < screeny < h:
+                tscheme_pixel.image.put(color, (screenx, screeny))
 
+tscheme_pixel.size = 1
 @builtin("pixelsize")
 def tscheme_pixelsize(size):
     """Change pixel size to SIZE."""
     _check_nums(size)
-    _tscheme_prep()
-    turtle.pixel_size(size)
+    if size <= 0 or not isinstance(size, numbers.Integral):
+        raise SchemeError("Invalid pixel size: " + repl_str(size))
+    tscheme_pixel.size = size
 
 @builtin("screen_width")
 def tscheme_screen_width():
     """Screen width in pixels of the current size (default 1)."""
-    _tscheme_prep()
-    return turtle.canvas_width()
+    return turtle.getcanvas().winfo_width() // tscheme_pixel.size
 
 @builtin("screen_height")
 def tscheme_screen_height():
     """Screen height in pixels of the current size (default 1)."""
-    _tscheme_prep()
-    return turtle.canvas_height()
-
-def _save(path):
-    if not builtins.TK_TURTLE:
-        path = path + ".png"
-        CANVAS.export().save(path, "png")
-    else:
-        CANVAS.export(path + ".ps")
-
-@builtin("save-to-file")
-def tscheme_write_to_file(path):
-    _tscheme_prep()
-    validate_type(path, scheme_stringp, 0, "save-to-file")
-    path = eval(path)
-    _save(path)
-
-@builtin("print-then-return")
-def scheme_print_return(val1, val2):
-    print(repl_str(val1))
-    return val2
+    return turtle.getcanvas().winfo_height() // tscheme_pixel.size

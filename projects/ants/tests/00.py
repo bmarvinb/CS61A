@@ -49,7 +49,7 @@ test = {
           ],
           'hidden': False,
           'locked': False,
-          'question': 'Is the armor attribute of the Ant class an instance attribute or class attribute? Why?'
+          'question': 'Is the armor attribute of the Ant class an instance or class attribute? Why?'
         },
         {
           'answer': 'class, all Ants of the same subclass deal the same damage',
@@ -114,7 +114,7 @@ test = {
         {
           'answer': 'The bee stings the ant in its place or moves to the next place if there is no ant in its place',
           'choices': [
-            'The bee moves to the next place, then stings the ant in that place',
+            'The bee collects one pollen point for the Bee Hive',
             'The bee flies to the nearest Ant and attacks it',
             'The bee stings the ant in its place or moves to the next place if there is no ant in its place',
             'The bee stings the ant in its place and then moves to the next place'
@@ -124,12 +124,11 @@ test = {
           'question': 'What does a Bee do during one of its turns?'
         },
         {
-          'answer': 'When any bee reaches the end of the tunnel or when the Queen Ant is killed',
+          'answer': 'When the bees reach the end of the tunnel or when the Queen Ant is killed',
           'choices': [
             'When the bees enter the colony',
             'When the colony runs out of food',
-            'When any bee reaches the end of the tunnel or when the Queen Ant is killed',
-            'When any bee reaches the end of the tunnel and the Queen Ant is killed',
+            'When the bees reach the end of the tunnel or when the Queen Ant is killed',
             'When no ants are left on the map'
           ],
           'hidden': False,

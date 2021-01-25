@@ -387,7 +387,7 @@ enchant.ENV = {
         }
     }()),
     /**
-     * Determines if for current browser Flash should be used to play
+     * Determines if for current browser Flash should be used to play 
      * sound instead of the native audio class.
      * True, if flash should be used.
      * @type Boolean
@@ -2372,7 +2372,7 @@ enchant.Entity = enchant.Class.create(enchant.Node, {
         /**
          * Defines this Entity as a button.
          * When touched or clicked the corresponding button event is dispatched.
-         * Valid buttonModes are: left, right, up, down, a, b.
+         * Valid buttonModes are: left, right, up, down, a, b. 
          * @type String
          */
         this.buttonMode = null;
@@ -2498,7 +2498,7 @@ enchant.Entity = enchant.Class.create(enchant.Node, {
     },
     /**
      * Performs a collision detection based on whether or not the bounding rectangles are intersecting.
-     * @param {*} other An object like Entity, with the properties x, y, width, height, which are used for the
+     * @param {*} other An object like Entity, with the properties x, y, width, height, which are used for the 
      * collision detection.
      * @return {Boolean} True, if a collision was detected.
      */
@@ -2599,7 +2599,7 @@ enchant.Entity = enchant.Class.create(enchant.Node, {
     },
     /**
      * Performs a collision detection based on distance from the Entity's central point.
-     * @param {*} other An object like Entity, with properties x, y, width, height, which are used for the
+     * @param {*} other An object like Entity, with properties x, y, width, height, which are used for the 
      * collision detection.
      * @param {Number} [distance] The greatest distance to be considered for a collision.
      * The default distance is the average of both objects width and height.
@@ -2860,9 +2860,9 @@ enchant.Sprite = enchant.Class.create(enchant.Entity, {
     },
     /**
      * Indizes of the frames to be displayed.
-     * Frames with same width and height as Sprite will be arrayed from upper left corner of the
-     * {@link enchant.Sprite#image} image. When a sequence of numbers is provided, the displayed frame
-     * will switch automatically. At the end of the array the sequence will restart. By setting
+     * Frames with same width and height as Sprite will be arrayed from upper left corner of the 
+     * {@link enchant.Sprite#image} image. When a sequence of numbers is provided, the displayed frame 
+     * will switch automatically. At the end of the array the sequence will restart. By setting 
      * a value within the sequence to null, the frame switching is stopped.
      *
      * @example
@@ -3342,7 +3342,7 @@ enchant.Map = enchant.Class.create(enchant.Entity, {
     },
     /**
      * Set map data.
-     * Sets the tile data, whereas the data (two-dimensional array with indizes starting from 0)
+     * Sets the tile data, whereas the data (two-dimensional array with indizes starting from 0) 
      * is mapped on the image starting from the upper left corner.
      * When more than one map data array is set, they are displayed in reverse order.
      * @param {...Number[][]} data Two-dimensional array of tile indizes. Multiple designations possible.

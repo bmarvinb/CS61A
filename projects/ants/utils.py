@@ -2,7 +2,7 @@ def class_method_wrapper(method, pre=None, post=None):
     """Given a class METHOD and two wrapper function, a PRE-function and
     POST-function, first calls the pre-wrapper, calls the wrapped class method,
     and then calls the post-wrapper.
-
+    
     All wrappers should have the parameters (self, rv, *args). However,
     pre-wrappers will always have `None` passed in as `rv`, since a return
     value has not been evaluated yet.
@@ -36,7 +36,7 @@ def class_method_wrapper(method, pre=None, post=None):
 def print_expired_insects(self, rv, *args):
     """Post-wrapper for Insect.reduce_armor, and will print a message if the
     insect has expired (armor reduced to 0).
-
+    
     >>> from ants import Insect, Bee, ThrowerAnt, Place
     >>> Insect.reduce_armor = class_method_wrapper(Insect.reduce_armor,
     ...         pre=print_expired_insects)
@@ -59,22 +59,22 @@ def print_thrower_target(self, rv, *args):
     """Prints the target of a ThrowerAnt, if the ThrowerAnt found a target.
 
     >>> from ants import *
-    >>> beehive = Hive(AssaultPlan())
+    >>> hive = Hive(AssaultPlan())
     >>> dimensions = (1, 9)
-    >>> gamestate = GameState(None, beehive, ant_types(), dry_layout, dimensions)
+    >>> colony = AntColony(None, hive, ant_types(), dry_layout, dimensions)
     >>> ThrowerAnt.nearest_bee = class_method_wrapper(ThrowerAnt.nearest_bee,
     ...         post=print_thrower_target)
     >>> thrower = ThrowerAnt()
     >>> short = ShortThrower()
     >>> bee = Bee(5)
-    >>> gamestate.places['tunnel_0_1'].add_insect(short)
-    >>> gamestate.places['tunnel_0_0'].add_insect(thrower)
-    >>> gamestate.places['tunnel_0_5'].add_insect(bee)
-    >>> thrower.action(gamestate)
+    >>> colony.places['tunnel_0_1'].add_insect(short)
+    >>> colony.places['tunnel_0_0'].add_insect(thrower)
+    >>> colony.places['tunnel_0_5'].add_insect(bee)
+    >>> thrower.action(colony)
     ThrowerAnt(1, tunnel_0_0) targeted Bee(5, tunnel_0_5)
-    >>> short.action(gamestate)    # Bee not in range of ShortThrower
-    >>> bee.action(gamestate)      # Bee moves into range
-    >>> short.action(gamestate)
+    >>> short.action(colony)    # Bee not in range of ShortThrower
+    >>> bee.action(colony)      # Bee moves into range
+    >>> short.action(colony)
     ShortThrower(1, tunnel_0_1) targeted Bee(4, tunnel_0_4)
     """
     if rv is not None:

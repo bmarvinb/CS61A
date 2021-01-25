@@ -1,6 +1,6 @@
 test = {
   'name': 'Problem 3',
-  'points': 3,
+  'points': 1,
   'suites': [
     {
       'cases': [
@@ -68,20 +68,19 @@ test = {
         {
           'code': r"""
           >>> # Testing nearest_bee
+          >>> thrower = ThrowerAnt()
           >>> near_bee = Bee(2) # A Bee with 2 armor
           >>> far_bee = Bee(3)  # A Bee with 3 armor
-          >>> near_place = gamestate.places['tunnel_0_3']
-          >>> far_place = gamestate.places['tunnel_0_6']
+          >>> ant_place = colony.places['tunnel_0_0']
+          >>> near_place = colony.places['tunnel_0_3']
+          >>> far_place = colony.places['tunnel_0_6']
+          >>> ant_place.add_insect(thrower)
           >>> near_place.add_insect(near_bee)
           >>> far_place.add_insect(far_bee)
-          >>> nearest_bee = thrower.nearest_bee(gamestate.beehive)
-          >>> thrower.nearest_bee(gamestate.beehive) is far_bee
-          False
-          >>> thrower.nearest_bee(gamestate.beehive) is near_bee
-          True
+          >>> nearest_bee = thrower.nearest_bee(colony.hive)
           >>> nearest_bee.armor
           2
-          >>> thrower.action(gamestate)    # Attack! ThrowerAnts do 1 damage
+          >>> thrower.action(colony)    # Attack! ThrowerAnts do 1 damage
           >>> near_bee.armor
           1
           >>> far_bee.armor
@@ -94,13 +93,39 @@ test = {
         },
         {
           'code': r"""
-          >>> # Testing Nearest bee not in the beehive
-          >>> beehive = gamestate.beehive
-          >>> bee = Bee(2)
-          >>> beehive.add_insect(bee)      # Adding a bee to the beehive
-          >>> thrower.nearest_bee(beehive) is bee
+          >>> # Testing nearest_bee
+          >>> thrower = ThrowerAnt()
+          >>> colony.places['tunnel_0_0'].add_insect(thrower)
+          >>> place = colony.places['tunnel_0_0']
+          >>> near_bee = Bee(2)
+          >>> far_bee = Bee(2)
+          >>> colony.places["tunnel_0_3"].add_insect(near_bee)
+          >>> colony.places["tunnel_0_6"].add_insect(far_bee)
+          >>> hive = colony.hive
+          >>> thrower.nearest_bee(hive) is far_bee
           False
-          >>> thrower.action(gamestate)    # Attempt to attack
+          >>> thrower.nearest_bee(hive) is near_bee
+          True
+          >>> thrower.action(colony)    # Attack!
+          >>> near_bee.armor            # Should do 1 damage
+          1
+          >>> thrower.place is place    # Don't change self.place!
+          True
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing Nearest bee not in the hive
+          >>> thrower = ThrowerAnt()
+          >>> colony.places["tunnel_0_0"].add_insect(thrower)
+          >>> hive = colony.hive
+          >>> bee = Bee(2)
+          >>> hive.add_insect(bee)      # Adding a bee to the hive
+          >>> thrower.nearest_bee(hive) is bee
+          False
+          >>> thrower.action(colony)    # Attempt to attack
           >>> bee.armor                 # Bee armor should not change
           2
           """,
@@ -110,11 +135,13 @@ test = {
         {
           'code': r"""
           >>> # Test that ThrowerAnt attacks bees on its own square
+          >>> thrower = ThrowerAnt()
+          >>> colony.places['tunnel_0_0'].add_insect(thrower)
           >>> near_bee = Bee(2)
-          >>> ant_place.add_insect(near_bee)
-          >>> thrower.nearest_bee(gamestate.beehive) is near_bee
+          >>> colony.places["tunnel_0_0"].add_insect(near_bee)
+          >>> thrower.nearest_bee(colony.hive) is near_bee
           True
-          >>> thrower.action(gamestate)   # Attack!
+          >>> thrower.action(colony)   # Attack!
           >>> near_bee.armor           # should do 1 damage
           1
           """,
@@ -124,11 +151,13 @@ test = {
         {
           'code': r"""
           >>> # Test that ThrowerAnt attacks bees at end of tunnel
+          >>> thrower = ThrowerAnt()
+          >>> colony.places['tunnel_0_0'].add_insect(thrower)
           >>> near_bee = Bee(2)
-          >>> gamestate.places["tunnel_0_8"].add_insect(near_bee)
-          >>> thrower.nearest_bee(gamestate.beehive) is near_bee
+          >>> colony.places["tunnel_0_8"].add_insect(near_bee)
+          >>> thrower.nearest_bee(colony.hive) is near_bee
           True
-          >>> thrower.action(gamestate)   # Attack!
+          >>> thrower.action(colony)   # Attack!
           >>> near_bee.armor           # should do 1 damage
           1
           """,
@@ -138,11 +167,13 @@ test = {
         {
           'code': r"""
           >>> # Test that ThrowerAnt attacks bees 4 places away
+          >>> thrower = ThrowerAnt()
+          >>> colony.places['tunnel_0_0'].add_insect(thrower)
           >>> near_bee = Bee(2)
-          >>> gamestate.places["tunnel_0_4"].add_insect(near_bee)
-          >>> thrower.nearest_bee(gamestate.beehive) is near_bee
+          >>> colony.places["tunnel_0_4"].add_insect(near_bee)
+          >>> thrower.nearest_bee(colony.hive) is near_bee
           True
-          >>> thrower.action(gamestate)   # Attack!
+          >>> thrower.action(colony)   # Attack!
           >>> near_bee.armor           # should do 1 damage
           1
           """,
@@ -152,14 +183,16 @@ test = {
         {
           'code': r"""
           >>> # Testing ThrowerAnt chooses a random target
+          >>> thrower = ThrowerAnt()
+          >>> colony.places["tunnel_0_0"].add_insect(thrower)
           >>> bee1 = Bee(1001)
           >>> bee2 = Bee(1001)
-          >>> gamestate.places["tunnel_0_3"].add_insect(bee1)
-          >>> gamestate.places["tunnel_0_3"].add_insect(bee2)
+          >>> colony.places["tunnel_0_3"].add_insect(bee1)
+          >>> colony.places["tunnel_0_3"].add_insect(bee2)
           >>> # Throw 1000 times. The first bee should take ~1000*1/2 = ~500 damage,
           >>> # and have ~501 remaining.
           >>> for _ in range(1000):
-          ...     thrower.action(gamestate)
+          ...     thrower.action(colony)
           >>> # Test if damage to bee1 is within 6 standard deviations (~95 damage)
           >>> # If bees are chosen uniformly, this is true 99.9999998% of the time.
           >>> def dmg_within_tolerance():
@@ -174,31 +207,11 @@ test = {
       'scored': True,
       'setup': r"""
       >>> from ants import *
-      >>> beehive, layout = Hive(AssaultPlan()), dry_layout
+      >>> hive, layout = Hive(AssaultPlan()), dry_layout
       >>> dimensions = (1, 9)
-      >>> gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
-      >>> thrower = ThrowerAnt()
-      >>> ant_place = gamestate.places["tunnel_0_0"]
-      >>> ant_place.add_insect(thrower)
+      >>> colony = AntColony(None, hive, ant_types(), layout, dimensions)
       >>> #
       """,
-      'teardown': '',
-      'type': 'doctest'
-    },
-    {
-      'cases': [
-        {
-          'code': r"""
-          >>> from ants import *
-          >>> ThrowerAnt.implemented
-          True
-          """,
-          'hidden': False,
-          'locked': False
-        }
-      ],
-      'scored': True,
-      'setup': '',
       'teardown': '',
       'type': 'doctest'
     }

@@ -1,58 +1,32 @@
 test = {
-  'name': 'Problem 18 (Optional)',
-  'points': 0,
+  'name': 'Problem 18',
+  'points': 2,
   'suites': [
     {
       'cases': [
         {
           'code': r"""
-          scm> (define y 1)
-          1a9a3321b8b99a0f9291d89be986e74c
-          # locked
-          scm> (define f (mu (x) (+ x y)))
-          715124391110b4a3beec8c9ba1ec3097
-          # locked
-          scm> (define g (lambda (x y) (f (+ x x))))
-          4781badc0e77c1e0291e161d5c9bfa57
-          # locked
-          scm> (g 3 7)
-          ac8f8bf5e63b01fde95f04f5c6ce2820
-          # locked
+          scm> (list-change 10 '(25 10 5 1))
+          ((10) (5 5) (5 1 1 1 1 1) (1 1 1 1 1 1 1 1 1 1))
+          scm> (list-change 5 '(4 3 2 1))
+          ((4 1) (3 2) (3 1 1) (2 2 1) (2 1 1 1) (1 1 1 1 1))
           """,
           'hidden': False,
-          'locked': True
-        }
-      ],
-      'scored': True,
-      'setup': '',
-      'teardown': '',
-      'type': 'scheme'
-    },
-    {
-      'cases': [
+          'locked': False
+        },
         {
           'code': r"""
-          scm> (define h (mu () x))
-          h
-          scm> (define (high fn x) (fn))
-          high
-          scm> (high h 2)
-          2
-          scm> (define (f x) (mu () (lambda (y) (+ x y))))
-          f
-          scm> (define (g x) (((f (+ x 1))) (+ x 2)))
-          g
-          scm> (g 3)
-          8
-          scm> (mu ())
-          SchemeError
+          scm> (list-change 7 '(5 4 3 2 1))
+          ((5 2) (5 1 1) (4 3) (4 2 1) (4 1 1 1) (3 3 1) (3 2 2) (3 2 1 1) (3 1 1 1 1) (2 2 2 1) (2 2 1 1 1) (2 1 1 1 1 1) (1 1 1 1 1 1 1))
           """,
           'hidden': False,
           'locked': False
         }
       ],
       'scored': True,
-      'setup': '',
+      'setup': r"""
+      scm> (load 'questions)
+      """,
       'teardown': '',
       'type': 'scheme'
     }

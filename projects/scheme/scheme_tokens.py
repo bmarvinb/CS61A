@@ -18,7 +18,6 @@ import itertools
 import string
 import sys
 import tokenize
-import warnings
 
 _NUMERAL_STARTS = set(string.digits) | set('+-.')
 _SYMBOL_CHARS = (set('!$%&*/:<=>?@^_~') | set(string.ascii_lowercase) |
@@ -28,7 +27,6 @@ _WHITESPACE = set(' \t\n\r')
 _SINGLE_CHAR_TOKENS = set("()[]'`")
 _TOKEN_END = _WHITESPACE | _SINGLE_CHAR_TOKENS | _STRING_DELIMS | {',', ',@'}
 DELIMITERS = _SINGLE_CHAR_TOKENS | {'.', ',', ',@'}
-_MAX_TOKEN_LENGTH = 50
 
 def valid_symbol(s):
     """Returns whether s is a well-formed symbol."""
@@ -69,13 +67,11 @@ def next_candidate_token(line, k):
             token = next(gen)
             if token.type != tokenize.STRING:
                 raise ValueError("invalid string: {0}".format(token.string))
-            check_token_length_warning(token.string, token.end[1])
             return token.string, token.end[1]+k
         else:
             j = k
             while j < len(line) and line[j] not in _TOKEN_END:
                 j += 1
-            check_token_length_warning(line[k:j], min(j, len(line)) - k)
             return line[k:j], min(j, len(line))
     return None, len(line)
 
@@ -112,27 +108,20 @@ def tokenize_line(line):
         elif text[0] in _STRING_DELIMS:
             result.append(text)
         else:
-            error_message = [
-                "warning: invalid token: {0}".format(text),
-                " " * 4       + line,
-                " " * (i + 4) + "^"
-            ]
-            raise ValueError("\n".join(error_message))
+            print("warning: invalid token: {0}".format(text), file=sys.stderr)
+            print("    ", line, file=sys.stderr)
+            print(" " * (i+3), "^", file=sys.stderr)
         text, i = next_candidate_token(line, i)
     return result
 
-def check_token_length_warning(token, length):
-    if length > _MAX_TOKEN_LENGTH:
-        warnings.warn("Token {} has exceeded the maximum token length {}".format(token, _MAX_TOKEN_LENGTH, length))
-
-def tokenize_lines(inp):
+def tokenize_lines(input):
     """An iterator over lists of tokens, one for each line of the iterable
-    input sequence inp."""
-    return (tokenize_line(line) for line in inp)
+    input sequence."""
+    return (tokenize_line(line) for line in input)
 
-def count_tokens(inp):
-    """Count the number of non-delimiter tokens in inp."""
-    return len(list(itertools.chain(*tokenize_lines(inp))))
+def count_tokens(input):
+    """Count the number of non-delimiter tokens in input."""
+    return len(list(itertools.chain(*tokenize_lines(input))))
 
 @main
 def run(*args):

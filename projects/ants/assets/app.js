@@ -21,7 +21,7 @@ function updateControlPanel() {
         disabled = $(this).attr('data-disabled');
         if (disabled == 1 && gui.get_food() >= cost) {
             $(this).attr("data-disabled", 0).removeClass("ant-inactive");
-        }
+        } 
         else if (disabled == 0 && gui.get_food() < cost) {
             $(this).attr("data-disabled", 1).addClass("ant-inactive");
         }
@@ -59,12 +59,12 @@ function drawInitialPlaces() {
         }
         if (i == 0) {
             rowspan = rows + 1
-            tr.append('<td id="beehive-td" rowspan="' + rowspan + '" class="place-beehive-td"></td>')
-            td = tr.find('.place-beehive-td');
+            tr.append('<td id="hive-td" rowspan="' + rowspan + '" class="place-hive-td"></td>')
+            td = tr.find('.place-hive-td');
             for (bee in places["Hive"]["insects"]) {
                 td.append('<img data-id="' + bee  + '" class="bee-img" src="assets/insects/bee.gif">');
             }
-            pTable.find('.place-beehive-td').html()
+            pTable.find('.place-hive-td').html()
         }
         i += 1;
     }
@@ -268,7 +268,7 @@ $('.places-table').on('click', '.places-td', function() {
                     text: response["error"],
                     type: "error",
                 });
-            }
+            }        
             else {
                 //$(t).find('.tunnel-img-container').html('<img data-id="' + response["id"]  +'" class="active-ant" src="' + selectedAnt["img"]  + '">');
                 r = $(t).attr("data-row");
@@ -293,7 +293,7 @@ GUI.prototype.moveBees = function() {
             loc = $('.places-table').find('td[data-name="' + newLocation[bee]  + '"]');
             img = $('.bee-img[data-id="' + bee  + '"]');
             if (img.css("position") != "absolute") {
-                $('.place-beehive-td').css({width: $('.place-beehive-td').width()});
+                $('.place-hive-td').css({width: $('.place-hive-td').width()});
                 currentLocTop = img.position().top;
                 currentLocLeft = img.position().left;
                 img.css({"margin-top": "40px", "top": currentLocTop, "left": currentLocLeft, "position": "absolute"});
@@ -317,14 +317,14 @@ GUI.prototype.removeAnts = function() {
     for (a in di) {
         if ($.inArray(a, this.deadinsects) == -1) {
             //We have some ant killing to do lol -CS
-
+            
             img = $('.places-table').find('.active-ant[data-id="' + di[a] + '"]')
             img.hide("explode", {pieces: 16}, 1000);
             if(img[0]){
               td = img[0].closest("td");
               r = $(td).attr("data-row");
               c = $(td).attr("data-col");
-              gui.locToAnt[r][c].shift();
+              gui.locToAnt[r][c].shift(); 
             }
             this.deadinsects.push(di[a]);
         }
@@ -368,7 +368,7 @@ GUI.prototype.update = function() {
             continue;
         }
         for (c in places[r]) {
-            if ("type" in places[r][c]["insects"]) {
+            if ("type" in places[r][c]["insects"]) { 
               ant = places[r][c]["insects"];
               antImgTag =  make_img_tag(ant["img"],{"data-id":gui.locToAnt[r][c][0], "class":"active-ant", "container":ant["container"]})
               if(ant["container"] && ant["contains"]){

@@ -21,7 +21,7 @@ class Buffer(object):
     the end of data.
 
     The Buffer in effect concatenates the sequences returned from its source
-    and then supplies the items from them one at a time through its pop_first()
+    and then supplies the items from them one at a time through its remove_front()
     method, calling the source for more sequences of items only when needed.
 
     In addition, Buffer provides a current method to look at the
@@ -31,32 +31,32 @@ class Buffer(object):
     current line, and marks the current token with >>.
 
     >>> buf = Buffer(iter([['(', '+'], [15], [12, ')']]))
-    >>> buf.pop_first()
+    >>> buf.remove_front()
     '('
-    >>> buf.pop_first()
+    >>> buf.remove_front()
     '+'
     >>> buf.current()
     15
     >>> print(buf)
     1: ( +
     2:  >> 15
-    >>> buf.pop_first()
+    >>> buf.remove_front()
     15
     >>> buf.current()
     12
-    >>> buf.pop_first()
+    >>> buf.remove_front()
     12
     >>> print(buf)
     1: ( +
     2: 15
     3: 12 >> )
-    >>> buf.pop_first()
+    >>> buf.remove_front()
     ')'
     >>> print(buf)
     1: ( +
     2: 15
     3: 12 ) >>
-    >>> buf.pop_first()  # returns None
+    >>> buf.remove_front()  # returns None
     """
     def __init__(self, source):
         self.index = 0
@@ -65,7 +65,7 @@ class Buffer(object):
         self.current_line = ()
         self.current()
 
-    def pop_first(self):
+    def remove_front(self):
         """Remove the next item from self and return it. If self has
         exhausted its source, returns None."""
         current = self.current()

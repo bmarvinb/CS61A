@@ -1,74 +1,121 @@
 test = {
-  'name': 'Problem 20 (Optional)',
-  'points': 0,
+  'name': 'Problem 20 (EC)',
+  'points': 2,
   'suites': [
     {
       'cases': [
         {
           'code': r"""
-          scm> (define-macro (for formal iterable body)
-          ....               (list 'map (list 'lambda (list formal) body) iterable))
-          for
-          scm> (for i '(1 2 3)
-          ....      (if (= i 1)
-          ....          0
-          ....          i))
-          (0 2 3)
+          scm> (define (sum n total)
+          ....   (if (zero? n)
+          ....       total
+          ....       (sum (- n 1) (+ n total))))
+          sum
+          scm> (sum 1001 0)
+          501501
           """,
           'hidden': False,
           'locked': False
         },
         {
           'code': r"""
-          scm> (define (cadr s) (car (cdr s)))
-          cadr
-          scm> (define (cars s) (map car s))
-          cars
-          scm> (define (cadrs s) (map cadr s))
-          cadrs
-          scm> (define-macro (leet bindings expr)
-          ....               (cons (list 'lambda (cars bindings) expr)
-          ....                     (cadrs bindings)))
-          leet
-          scm> (define (square x) (* x x))
-          square
-          scm> (define (hyp a b)
-          ....         (leet ((a2 (square a)) (b2 (square b))) (sqrt (+ a2 b2))))
-          hyp
-          scm> (hyp 3 4)
-          5.0
+          scm> (define (sum n total)
+          ....   (if (zero? n)
+          ....       total
+          ....       (if #f 42 (sum (- n 1) (+ n total)))))
+          sum
+          scm> (sum 1001 0)
+          501501
           """,
           'hidden': False,
           'locked': False
         },
         {
           'code': r"""
-          scm> (define-macro wat?)
-          SchemeError
-          scm> (define-macro woah okay)
-          SchemeError
-          scm> (define-macro (hello world))
-          SchemeError
-          scm> (define-macro (5) (list 1 2))
-          SchemeError
-          scm> (define-macro (name) (body))
-          name
-          scm> name
-          (lambda () (body))
-          scm> (name)
-          SchemeError
+          scm> (define (sum n total)
+          ....   (cond ((zero? n) total)
+          ....         ((zero? 0) (sum (- n 1) (+ n total)))
+          ....         (else 42)))
+          sum
+          scm> (sum 1001 0)
+          501501
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (sum n total)
+          ....   (if (zero? n)
+          ....       total
+          ....       (add n (+ n total))))
+          sum
+          scm> (define add (lambda (x+1 y) (sum (- x+1 1) y)))
+          add
+          scm> (sum 1001 0)
+          501501
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (sum n total)
+          ....   (if (zero? n)
+          ....       total
+          ....       (let ((n-1 (- n 1)))
+          ....            (sum n-1 (+ n total)))))
+          sum
+          scm> (sum 1001 0)
+          501501
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (sum n total)
+          ....   (or (and (zero? n) total)
+          ....       (add n (+ n total))))
+          sum
+          scm> (define add (lambda (x+1 y) (sum (- x+1 1) y)))
+          add
+          scm> (sum 1001 0)
+          501501
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (sum n total)
+          ....   (define add (lambda (x+1 y) (sum (- x+1 1) y)))
+          ....   (or (and (zero? n) total)
+          ....       (add n (+ n total))))
+          sum
+          scm> (sum 1001 0)
+          501501
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (sum n total)
+          ....   (begin
+          ....      (define add (lambda (x+1 y) (sum (- x+1 1) y)))
+          ....      (or (and (zero? n) total)
+          ....          (add n (+ n total)))))
+          sum
+          scm> (sum 1001 0)
+          501501
           """,
           'hidden': False,
           'locked': False
         }
       ],
       'scored': True,
-      'setup': r"""
-      scm> (define (map f lst)
-      ....         (if (null? lst)
-      ....             nil
-      ....             (cons (f (car lst)) (map f (cdr lst)))))
-      """,
+      'setup': '',
       'teardown': '',
       'type': 'scheme'
     }

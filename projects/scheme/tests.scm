@@ -7,8 +7,11 @@
 ;;; after the last test you wish to run.
 
 ;;; ********************************
-;;; *** Add your own tests here! (Optional) ***
+;;; *** Add your own tests here! ***
 ;;; ********************************
+; BEGIN PROBLEM 0
+'replace-this-line
+; END PROBLEM 0
 
 ;;; These are examples from several sections of "The Structure
 ;;; and Interpretation of Computer Programs" by Abelson and Sussman.
@@ -54,6 +57,10 @@
       6))
 ; expect 57
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Move the following (exit) line down the file to run additional tests. ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(exit)
 
 
 ;;; 1.1.2
@@ -536,6 +543,27 @@ one-through-four
 ((lambda (x) (display x) (newline) x) 2)
 ; expect 2 ; 2
 
+(define g (mu () x))
+(define (high f x)
+  (f))
+
+(high g 2)
+; expect 2
+
+(define (print-and-square x)
+  (print x)
+  (square x))
+(print-and-square 12)
+; expect 12 ; 144
+
+(/ 1 0)
+; expect Error
+
+(define addx (mu (x) (+ x y)))
+(define add2xy (lambda (x y) (addx (+ x x))))
+(add2xy 3 7)
+; expect 13
+
 (let ((x 2)) ((begin (define x (+ x 1)) +) 3 (begin (define x (+ x 1)) x)))
 ; expect 7
 
@@ -552,61 +580,8 @@ one-through-four
 ; expect 4
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;; Tests from Doctests ;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(begin 1)
-; expect 1
-(begin 1 2)
-; expect 2
-(define x (begin (print 1) 2))
-; expect 1 ; x
-x
-; expect 2
-
-(define x 2)
-; expect x
-x
-; expect 2
-(define x (+ 2 8))
-; expect x
-x
-; expect 10
-(define (f x) (+ x 2))
-; expect f
-(f 3)
-; expect 5
-
-(quote (+ x 2))
-; expect (+ x 2)
-
-(lambda (x) (+ x 2))
-; expect (lambda (x) (+ x 2))
-
-(if #t (print 2) (print 3))
-; expect 2
-(if #f (print 2) (print 3))
-; expect 3
-
-(and #f (print 1))
-; expect #f
-(and (print 1) (print 2) (print 3) (print 4) 3 #f)
-; expect 1; 2; 3; 4; #f
-
-(or 10 (print 1))
-; expect 10
-(or #f 2 3 #t #f)
-; expect 2
-
-(cond (#f (print 2)) (#t (print 3)))
-; expect 3
-
-(let ((x 2) (y 3)) (+ x y))
-; expect 5
-
 ;;;;;;;;;;;;;;;;;;;;
-;;; Optional ;;;
+;;; Extra credit ;;;
 ;;;;;;;;;;;;;;;;;;;;
 
 (exit)
@@ -671,14 +646,3 @@ x
 
 (hyp 3 4)
 ; expect 5.000023178253949
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Optional Tests from Doctests ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(define-macro (f x) (car x))
-; expect f
-(f (1 2))
-; expect 1

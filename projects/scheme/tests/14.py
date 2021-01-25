@@ -6,70 +6,15 @@ test = {
       'cases': [
         {
           'code': r"""
-          scm> (define x 1)
-          38ba916dc1f41eb239567ee41a251ecd
-          # locked
-          scm> (let ((x 5))
-          ....    (+ x 3))
-          c0601ee237917e38c49efbb7371235c5
-          # locked
-          scm> x
-          eb892a26497f936d1f6cae54aacc5f51
-          # locked
-          """,
-          'hidden': False,
-          'locked': True
-        },
-        {
-          'code': r"""
-          scm> (let ((a 1) (b a)) b)
-          ec908af60f03727428c7ee3f22ec3cd8
-          # locked
-          # choice: SchemeError
-          # choice: 1
-          # choice: x
-          # choice: y
-          """,
-          'hidden': False,
-          'locked': True
-        },
-        {
-          'code': r"""
-          scm> (let ((x 5))
-          ....    (let ((x 2)
-          ....          (y x))
-          ....        (+ y (* x 2))))
-          27c11fef0d1b8697654b38bb53c550c8
-          # locked
-          """,
-          'hidden': False,
-          'locked': True
-        },
-        {
-          'code': r"""
-          scm> (let ((a 2) (a 3)) (+ a a)) ; how should we catch something like this?
-          ec908af60f03727428c7ee3f22ec3cd8
-          # locked
-          scm> (let ((y 2 3)) (+ y y)) ; should this be an allowable form?
-          ec908af60f03727428c7ee3f22ec3cd8
-          # locked
-          """,
-          'hidden': False,
-          'locked': True
-        },
-        {
-          'code': r"""
-          scm> (define (square x) (* x x))
-          square
-          scm> (define (f x y)
-          ....    (let ((a (+ 1 (* x y)))
-          ....          (b (- 1 y)))
-          ....        (+ (* x (square a))
-          ....           (* y b)
-          ....           (* a b))))
-          f
-          scm> (f 3 4)
-          456
+          scm> (cond ((> 2 3) 5)
+          ....       ((> 2 4) 6)
+          ....       ((< 2 5) 7)
+          ....       (else 8))
+          7
+          scm> (cond ((> 2 3) 5)
+          ....       ((> 2 4) 6)
+          ....       (else 8))
+          8
           """,
           'hidden': False,
           'locked': False
@@ -84,74 +29,110 @@ test = {
       'cases': [
         {
           'code': r"""
-          >>> # Incorrectly formatted bindings
-          >>> bindings = Pair(Pair('x', Pair(2, nil)), Pair(Pair('y', nil), nil)) # equivalent to ((x 2) (y))
-          >>> make_let_frame(bindings, global_frame)
-          SchemeError
+          scm> (cond ((> 2 3) 5)
+          ....       ((> 2 4) 6)
+          ....       ((< 2 5) 7))
+          7
+          scm> (cond ((> 2 3) (display 'oops) (newline))
+          ....       (else 9))
+          9
+          scm> (cond ((< 2 1))
+          ....       ((> 3 2))
+          ....       (else 5))
+          #t
+          scm> (cond (#f 1))
+          scm> (cond ((= 4 3) 'nope)
+          ....       ((= 4 4) 'hi)
+          ....       (else 'wat))
+          hi
+          scm> (cond ((= 4 3) 'wat)
+          ....       ((= 4 4))
+          ....       (else 'hm))
+          #t
+          scm> (cond ((= 4 4) (+ 40 2))
+          ....       (else 'wat 0))
+          42
+          scm> (cond (12))
+          12
+          scm> (cond ((= 4 3))
+          ....       ('hi))
+          hi
+          scm> (eval (cond (False 1) (False 2)))
           """,
           'hidden': False,
           'locked': False
         },
         {
           'code': r"""
-          >>> # Improper formals list - used same variable name twice
-          >>> bindings = Pair(Pair('x', Pair(2, nil)), Pair(Pair('x', Pair(3, nil)), nil)) # equivalent to ((x 2) (x 3))
-          >>> make_let_frame(bindings, global_frame)
-          SchemeError
+          scm> (cond (0 'yea)
+          ....       (else 'nay))
+          yea
           """,
           'hidden': False,
           'locked': False
         },
         {
           'code': r"""
-          >>> bindings = Pair(Pair('x', Pair(2, nil)), Pair(Pair('y', Pair(3, nil)), nil)) # equivalent to ((x 2) (y 3))
-          >>> f1 = make_let_frame(bindings, global_frame)
-          >>> f1.lookup('x')
-          2
-          >>> bindings # make sure bindings isn't mutated
-          Pair(Pair('x', Pair(2, nil)), Pair(Pair('y', Pair(3, nil)), nil))
-          """,
-          'hidden': False,
-          'locked': False
-        }
-      ],
-      'scored': True,
-      'setup': r"""
-      >>> from scheme import *
-      >>> global_frame = create_global_frame()
-      """,
-      'teardown': '',
-      'type': 'doctest'
-    },
-    {
-      'cases': [
-        {
-          'code': r"""
-          scm> (define x 3)
+          scm> (define x 0)
           x
-          scm> (define y 4)
+          scm> (define y 0)
           y
-          scm> (let ((x (+ y 2))
-          ....       (y (+ x 2)))
-          ....      (cons x (cons y nil)))
-          (6 5)
-          scm> (let ((x 'hello)) x)
-          hello
-          scm> (let ((a 1) (b 2) (c 3)) (+ a b c))
-          6
           scm> (define z 0)
           z
-          scm> (let ((a (define z (+ z 1)))) z)
+          scm> (cond (#t
+          ....        (define x (+ x 1))
+          ....        (define y (+ y 1))
+          ....        (define z (+ z 1)))
+          ....       (else
+          ....        (define x (- x 5))
+          ....        (define y (- y 5))
+          ....        (define z (- z 5))))
+          z
+          scm> (list x y z)
+          (1 1 1)
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define x 0)
+          x
+          scm> (cond ((define x (+ x 1)) 'a)
+          ....       ((define x (+ x 100)) 'b))
+          a
+          scm> x
           1
-          scm> (let ((x 1)
-          ....       (y 3))
-          ....    (define x (+ x 1))
-          ....    (list x y))
-          (2 3)
-          scm> (let ((a 1 1)) a)
-          SchemeError
-          scm> (let ((a 1) (2 2)) a)
-          SchemeError
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (print-and-false val)
+          ....         (print val)
+          ....         #f)
+          print-and-false
+          scm> (cond ((print-and-false 'cond1))
+          ....       ((print-and-false 'cond2))
+          ....       ((print-and-false 'cond3))
+          ....       ((print-and-false 'cond4)))
+          cond1
+          cond2
+          cond3
+          cond4
+          scm> (define (print-and-true val)
+          ....         (print val)
+          ....         #t)
+          print-and-true
+          scm> (cond ((print-and-false 'cond1))
+          ....       ((print-and-false 'cond2))
+          ....       ((print-and-true 'cond3))
+          ....       ((print-and-false 'cond4)))
+          cond1
+          cond2
+          cond3
+          #t
           """,
           'hidden': False,
           'locked': False

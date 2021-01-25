@@ -1,30 +1,89 @@
 test = {
   'name': 'Problem 13',
-  'points': 2,
+  'points': 1,
   'suites': [
     {
       'cases': [
         {
           'code': r"""
-          scm> (cond ((> 2 3) 5)
-          ....       ((> 2 4) 6)
-          ....       ((< 2 5) 7)
-          ....       (else 8))
-          55f5a4841f9c1eacb1796dc6b0ba6ee9
-          # locked
-          scm> (cond ((> 2 3) 5)
-          ....       ((> 2 4) 6)
-          ....       (else 8))
-          c0601ee237917e38c49efbb7371235c5
-          # locked
-          scm> (cond ((= 1 1))
-          ....       ((= 4 4) 'huh)
-          ....       (else 'no))
-          c65729b823194bffbccc4a162f8653bd
-          # locked
+          scm> (and)
+          #t
+          scm> (and 1 #f)
+          #f
+          scm> (and (+ 1 1) 1)
+          1
+          scm> (and #f 5)
+          #f
+          scm> (and 4 5 (+ 3 3))
+          6
+          scm> (not (and #t #f 42 (/ 1 0)))
+          #t
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (not (and #f))
+          #t
+          scm> (and 3 2 #f)
+          #f
+          scm> (and 3 2 1)
+          1
+          scm> (and 3 #f 5)
+          #f
+          scm> (and 0 1 2 3)
+          3
+          scm> (define (true-fn) #t)
+          true-fn
+          scm> (and (true-fn))
+          #t
+          scm> (define x #f)
+          x
+          scm> (and x #t)
+          #f
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define x 0)
+          x
+          scm> (and (define x (+ x 1))
+          ....      (define x (+ x 10))
+          ....      (define x (+ x 100))
+          ....      (define x (+ x 1000)))
+          x
+          scm> x
+          1111
+          scm> (define x 0)
+          x
+          scm> (and (define x (+ x 1))
+          ....      (define x (+ x 10))
+          ....      #f
+          ....      (define x (+ x 100))
+          ....      (define x (+ x 1000)))
+          #f
+          scm> x
+          11
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (no-mutation) (and #t #t #t #t))
+          no-mutation
+          scm> no-mutation
+          (lambda () (and #t #t #t #t))
+          scm> (no-mutation)
+          #t
+          scm> no-mutation ; `and` should not cause mutation
+          (lambda () (and #t #t #t #t))
+          """,
+          'hidden': False,
+          'locked': False
         }
       ],
       'scored': True,
@@ -36,107 +95,98 @@ test = {
       'cases': [
         {
           'code': r"""
-          scm> (cond ((> 2 3) 5)
-          ....       ((> 2 4) 6)
-          ....       ((< 2 5) 7))
-          7
-          scm> (cond ((> 2 3) (display 'oops) (newline))
-          ....       (else 9))
-          9
-          scm> (cond ((< 2 1))
-          ....       ((> 3 2))
-          ....       (else 5))
+          scm> (or)
+          #f
+          scm> (or (+ 1 1))
+          2
+          scm> (not (or #f))
           #t
-          scm> (cond (#f 1))
-          scm> (cond ((= 4 3) 'nope)
-          ....       ((= 4 4) 'hi)
-          ....       (else 'wat))
-          hi
-          scm> (cond ((= 4 4) (+ 40 2))
-          ....       (else 'wat 0))
-          42
-          scm> (cond (12))
-          12
-          scm> (cond ((= 4 3))
-          ....       ('hi))
-          hi
-          scm> (eval (cond (False 1) (False 2)))
+          scm> (define (zero) 0)
+          zero
+          scm> (or (zero) 3)
+          0
+          scm> (or 4 #t (/ 1 0))
+          4
           """,
           'hidden': False,
           'locked': False
         },
         {
           'code': r"""
-          scm> (cond (0 'yea)
-          ....       (else 'nay))
-          yea
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          scm> (define x 0)
-          x
-          scm> (define y 0)
-          y
-          scm> (define z 0)
-          z
-          scm> (cond (#t
-          ....        (define x (+ x 1))
-          ....        (define y (+ y 1))
-          ....        (define z (+ z 1)))
-          ....       (else
-          ....        (define x (- x 5))
-          ....        (define y (- y 5))
-          ....        (define z (- z 5))))
-          z
-          scm> (list x y z)
-          (1 1 1)
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          scm> (define x 0)
-          x
-          scm> (cond ((define x (+ x 1)) 'a)
-          ....       ((define x (+ x 100)) 'b))
+          scm> (or 5 2 1)
+          5
+          scm> (or 0 1 2)
+          0
+          scm> (or #f (- 1 1) 1)
+          0
+          scm> (or 'a #f)
           a
-          scm> x
-          1
-          scm> (cond ((= 1 1) nil))
-          ()
+          scm> (or (< 2 3) (> 2 3) 2 'a)
+          #t
+          scm> (or (< 2 3) 2)
+          #t
+          scm> (define (false-fn) #f)
+          false-fn
+          scm> (or (false-fn) 'yay)
+          yay
           """,
           'hidden': False,
           'locked': False
         },
         {
           'code': r"""
-          scm> (define (print-and-false val)
-          ....         (print val)
-          ....         #f)
-          print-and-false
-          scm> (cond ((print-and-false 'cond1))
-          ....       ((print-and-false 'cond2))
-          ....       ((print-and-false 'cond3))
-          ....       ((print-and-false 'cond4)))
-          cond1
-          cond2
-          cond3
-          cond4
-          scm> (define (print-and-true val)
-          ....         (print val)
-          ....         #t)
-          print-and-true
-          scm> (cond ((print-and-false 'cond1))
-          ....       ((print-and-false 'cond2))
-          ....       ((print-and-true 'cond3))
-          ....       ((print-and-false 'cond4)))
-          cond1
-          cond2
-          cond3
+          scm> (define x 0)
+          x
+          scm> (or (begin (define x (+ x 1)) #f)
+          ....     (begin (define x (+ x 10)) #f)
+          ....     (begin (define x (+ x 100)) #f)
+          ....     (begin (define x (+ x 1000)) #f))
+          #f
+          scm> x
+          1111
+          scm> (define x 0)
+          x
+          scm> (or (begin (define x (+ x 1)) #f)
+          ....     (begin (define x (+ x 10)) #f)
+          ....     #t
+          ....     (begin (define x (+ x 100)) #f)
+          ....     (begin (define x (+ x 1000)) #f))
+          #t
+          scm> x
+          11
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (no-mutation) (or #f #f #f #f))
+          no-mutation
+          scm> no-mutation
+          (lambda () (or #f #f #f #f))
+          scm> (no-mutation)
+          #f
+          scm> no-mutation ; `or` should not cause mutation
+          (lambda () (or #f #f #f #f))
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (greater-than-5 x) (if (> x 5) #t #f))
+          greater-than-5
+          scm> (define (other y) (or (greater-than-5 y) #f))
+          other
+          scm> (other 2)
+          #f
+          scm> (other 6) ; test for mutation
+          #t
+          scm> (define (other y) (and (greater-than-5 y) #t))
+          other
+          scm> (other 2)
+          #f
+          scm> (other 6) ; test for mutation
           #t
           """,
           'hidden': False,

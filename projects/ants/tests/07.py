@@ -5,54 +5,58 @@ test = {
     {
       'cases': [
         {
-          'answer': 'Ant',
+          'answer': 'All Ant types have a blocks_path attribute that is inherited from the Ant superclass',
           'choices': [
-            'Ant',
-            'ThrowerAnt',
-            'HungryAnt',
-            'The WallAnt class does not inherit from any class'
+            r"""
+            All Ant types have a blocks_path attribute that is inherited from
+            the Ant superclass
+            """,
+            'Only the NinjaAnt has a blocks_path attribute',
+            'None of the Ant subclasses have a blocks_path attribute',
+            'All Ant types except for NinjaAnt have a blocks_path attribute'
           ],
           'hidden': False,
           'locked': False,
-          'question': 'What class does WallAnt inherit from?'
+          'question': 'Which Ant types have a blocks_path attribute?'
         },
         {
-          'answer': 'A WallAnt takes no action each turn',
+          'answer': 'blocks_path is True for every Ant subclass except NinjaAnt',
           'choices': [
-            'A WallAnt takes no action each turn',
-            'A WallAnt increases its own armor by 1 each turn',
-            'A WallAnt reduces its own armor by 1 each turn',
-            'A WallAnt attacks all the Bees in its place each turn'
+            'blocks_path is True for every Ant subclass except NinjaAnt',
+            'blocks_path is False for every Ant subclass except NinjaAnt',
+            'blocks_path is True for all Ants',
+            'blocks_path is False for all Ants'
           ],
           'hidden': False,
           'locked': False,
-          'question': "What is a WallAnt's action?"
+          'question': 'What is the value of blocks_path for each Ant subclass?'
         },
         {
-          'answer': 'Ant subclasses inherit the action method from the Insect class',
+          'answer': "When there is an Ant whose blocks_path attribute is True in the Bee's place",
           'choices': [
-            'Ant subclasses inherit the action method from the Insect class',
-            'Ant subclasses inherit the action method from the Ant class',
-            'Ant subclasses do not inherit the action method from any class'
+            "When there is an Ant in the Bee's place",
+            r"""
+            When there is an Ant whose blocks_path attribute is True in the
+            Bee's place
+            """,
+            "When there is not an NinjaAnt in the Bee's place",
+            "When there are no Ants in the Bee's place"
           ],
           'hidden': False,
           'locked': False,
-          'question': 'Where do Ant subclasses inherit the action method from?'
+          'question': 'When is the path of a Bee blocked?'
         },
         {
-          'answer': 'Nothing',
+          'answer': "Reduces the Bee's armor by the NinjaAnt's damage attribute",
           'choices': [
-            'Nothing',
-            'Throw a leaf at the nearest Bee',
-            'Move to the next place',
-            'Reduce the armor of all Bees in its place'
+            "Reduces the Bee's armor by the NinjaAnt's damage attribute",
+            "Reduces the Bee's armor to 0",
+            "Nothing, the NinjaAnt doesn't damage Bees",
+            "Blocks the Bee's path"
           ],
           'hidden': False,
           'locked': False,
-          'question': r"""
-          If a subclass of Ant does not override the action method, what is the
-          default action?
-          """
+          'question': 'What does a NinjaAnt do to each Bee that flies in its place?'
         }
       ],
       'scored': False,
@@ -62,55 +66,116 @@ test = {
       'cases': [
         {
           'code': r"""
-          >>> # Testing WallAnt parameters
-          >>> wall = WallAnt()
-          >>> wall.name
-          'Wall'
-          >>> wall.armor
-          4
-          >>> # `armor` should not be a class attribute
-          >>> not hasattr(WallAnt, 'armor')
-          True
-          >>> WallAnt.food_cost
-          4
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Abstraction tests
-          >>> original = Ant.__init__
-          >>> Ant.__init__ = lambda self, armor: print("init") #If this errors, you are not calling the parent constructor correctly.
-          >>> wall = WallAnt()
-          init
-          >>> Ant.__init__ = original
-          >>> wall = WallAnt()
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Testing WallAnt holds strong
-          >>> beehive, layout = Hive(AssaultPlan()), dry_layout
-          >>> gamestate = GameState(None, beehive, ant_types(), layout, (1, 9))
-          >>> place = gamestate.places['tunnel_0_4']
-          >>> wall = WallAnt()
-          >>> bee = Bee(1000)
-          >>> place.add_insect(wall)
-          >>> place.add_insect(bee)
-          >>> for i in range(3):
-          ...     bee.action(gamestate)
-          ...     wall.action(gamestate)   # WallAnt does nothing
-          >>> wall.armor
+          >>> # Testing NinjaAnt parameters
+          >>> ninja = NinjaAnt()
+          >>> ninja.armor
           1
+          >>> NinjaAnt.food_cost
+          5
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing blocks_path
+          >>> NinjaAnt.blocks_path
+          False
+          >>> HungryAnt.blocks_path
+          True
+          >>> FireAnt.blocks_path
+          True
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing NinjaAnts do not block bees
+          >>> p0 = colony.places["tunnel_0_0"]
+          >>> p1 = colony.places["tunnel_0_1"]  # p0 is p1's exit
+          >>> bee = Bee(2)
+          >>> ninja = NinjaAnt()
+          >>> thrower = ThrowerAnt()
+          >>> p0.add_insect(thrower)            # Add ThrowerAnt to p0
+          >>> p1.add_insect(bee)
+          >>> p1.add_insect(ninja)              # Add the Bee and NinjaAnt to p1
+          >>> bee.action(colony)
+          >>> bee.place is ninja.place          # Did NinjaAnt block the Bee from moving?
+          False
+          >>> bee.place is p0
+          True
+          >>> ninja.armor
+          1
+          >>> bee.action(colony)
+          >>> bee.place is p0                   # Did ThrowerAnt block the Bee from moving?
+          True
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing NinjaAnt strikes all bees in its place
+          >>> test_place = colony.places["tunnel_0_0"]
+          >>> for _ in range(3):
+          ...     test_place.add_insect(Bee(2))
+          >>> ninja = NinjaAnt()
+          >>> test_place.add_insect(ninja)
+          >>> ninja.action(colony)   # should strike all bees in place
+          >>> [bee.armor for bee in test_place.bees]
+          [1, 1, 1]
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing NinjaAnt strikes all bees, even if some expire
+          >>> test_place = colony.places["tunnel_0_0"]
+          >>> for _ in range(3):
+          ...     test_place.add_insect(Bee(1))
+          >>> ninja = NinjaAnt()
+          >>> test_place.add_insect(ninja)
+          >>> ninja.action(colony)   # should strike all bees in place
+          >>> len(test_place.bees)
+          0
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing damage is looked up on the instance
+          >>> place = colony.places["tunnel_0_0"]
+          >>> bee = Bee(900)
+          >>> place.add_insect(bee)
+          >>> buffNinja = NinjaAnt()
+          >>> buffNinja.damage = 500  # Sharpen the sword
+          >>> place.add_insect(buffNinja)
+          >>> buffNinja.action(colony)
           >>> bee.armor
-          1000
-          >>> wall.place is place
-          True
-          >>> bee.place is place
-          True
+          400
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing Ninja ant does not crash when left alone
+          >>> ninja = NinjaAnt()
+          >>> colony.places["tunnel_0_0"].add_insect(ninja)
+          >>> ninja.action(colony)
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> # Testing Bee does not crash when left alone
+          >>> bee = Bee(3)
+          >>> colony.places["tunnel_0_1"].add_insect(bee)
+          >>> bee.action(colony)
           """,
           'hidden': False,
           'locked': False
@@ -119,24 +184,11 @@ test = {
       'scored': True,
       'setup': r"""
       >>> from ants import *
+      >>> hive, layout = Hive(AssaultPlan()), dry_layout
+      >>> dimensions = (1, 9)
+      >>> colony = AntColony(None, hive, ant_types(), layout, dimensions)
+      >>> #
       """,
-      'teardown': '',
-      'type': 'doctest'
-    },
-    {
-      'cases': [
-        {
-          'code': r"""
-          >>> from ants import *
-          >>> WallAnt.implemented
-          True
-          """,
-          'hidden': False,
-          'locked': False
-        }
-      ],
-      'scored': True,
-      'setup': '',
       'teardown': '',
       'type': 'doctest'
     }

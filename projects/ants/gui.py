@@ -1,5 +1,4 @@
 import ants
-import ants_strategies
 import utils
 import state
 import json
@@ -43,13 +42,13 @@ class GUI:
 
     def __init__(self):
         self.active = True
-        self.cleanState()
+        self.cleanState();
 
     def cleanState(self):
         self.initialized = False
         self.state = state.State()
         self.gameOver = False
-        self.gamestate = None
+        self.colony = None
         self.currentBeeId = 0
         self.currentInsectId = 0
         self.insects = []
@@ -61,7 +60,8 @@ class GUI:
         self.beeLocations = {}
 
     def makeHooks(self):
-        ants.Insect.death_callback = dead_insect
+        ants.Insect.reduce_armor = utils.class_method_wrapper(ants.Insect.reduce_armor, post=dead_insects)
+        ants.AntColony.remove_ant = utils.class_method_wrapper(ants.AntColony.remove_ant, post=removed_ant)
 
 
     def newGameThread(self):
@@ -70,7 +70,7 @@ class GUI:
         importlib.reload(ants) # resets ants, e.g. with newly implemented Ants
         self.makeHooks()
 
-        self.winner = ants_strategies.start_with_strategy(gui.args, gui.strategy)
+        self.winner = ants.start_with_strategy(gui.args, gui.strategy)
         self.gameOver = True
         self.saveState("winner", self.winner)
         self.saveState("gameOver", self.gameOver)
@@ -87,20 +87,20 @@ class GUI:
     def exit(self, data=None):
         self.active = False
 
-    def initialize_colony_graphics(self, gamestate):
-        self.gamestate = gamestate
+    def initialize_colony_graphics(self, colony):
+        self.colony = colony
         self.ant_type_selected = -1
         self.saveState("strategyTime", STRATEGY_SECONDS)
-        self.saveState("food", self.gamestate.food)
+        self.saveState("food", self.colony.food)
         self.ant_types = self.get_ant_types()
-        self._init_places(gamestate)
+        self._init_places(colony)
         self.saveState("places", self.places)
         #Finally log that we are initialized
         self.initialized = True
 
     def get_ant_types(self, noSave=False):
         ant_types = [];
-        for name, ant_type in self.gamestate.ant_types.items():
+        for name, ant_type in self.colony.ant_types.items():
             ant_types.append({"name": name, "cost": ant_type.food_cost, "img": self.get_insect_img_file(name)})
 
         #Sort by cost
@@ -121,17 +121,17 @@ class GUI:
         """Saves our game object to JSON file"""
         self.state.updateState(key, val)
 
-    def strategy(self, gamestate):
-        """The strategy function is called by ants.GameState each turn"""
+    def strategy(self, colony):
+        """The strategy function is called by ants.AntColony each turn"""
         #Have we initialized our graphics yet?
         if not self.initialized:
             #No, so do that now
-            self.initialize_colony_graphics(gamestate)
+            self.initialize_colony_graphics(colony)
         elapsed = 0 #Physical time elapsed this turn
         self.saveState("time", int(elapsed))
         while elapsed < STRATEGY_SECONDS:
-            self.saveState("time", gamestate.time)
-            self._update_control_panel(gamestate)
+            self.saveState("time", colony.time)
+            self._update_control_panel(colony)
             sleep(0.25)
             elapsed += 0.25
 
@@ -141,13 +141,13 @@ class GUI:
     def get_place_column(self, name):
         return name.split("_")[2]
 
-    def _init_places(self, gamestate):
+    def _init_places(self, colony):
         """Calculate all of our place data"""
         self.places = {};
         self.images = { 'AntQueen': dict() }
         rows = 0
         cols = 0
-        for name, place in gamestate.places.items():
+        for name, place in colony.places.items():
             if place.name == 'Hive':
                 continue
             pCol = self.get_place_column(name)
@@ -161,10 +161,10 @@ class GUI:
                 self.places[pRow][pCol]["water"] = 1
             self.images[name] = dict()
         #Add the Hive
-        self.places[gamestate.beehive.name] = { "name": name, "type": "beehive", "water": 0, "insects": {} }
-        self.places[gamestate.beehive.name]["insects"] = []
-        for bee in gamestate.beehive.bees:
-            self.places[gamestate.beehive.name]["insects"].append({"id": self.currentBeeId, "type": "bee"})
+        self.places[colony.hive.name] = { "name": name, "type": "hive", "water": 0, "insects": {} }
+        self.places[colony.hive.name]["insects"] = []
+        for bee in colony.hive.bees:
+            self.places[colony.hive.name]["insects"].append({"id": self.currentBeeId, "type": "bee"})
             self.beeToId[bee] = self.currentBeeId
             self.currentBeeId += 1
         self.saveState("rows", rows)
@@ -172,15 +172,15 @@ class GUI:
 
 
     def update_food(self):
-        self.saveState("food", self.gamestate.food)
+        self.saveState("food", self.colony.food)
 
-    def _update_control_panel(self, gamestate):
+    def _update_control_panel(self, colony):
         """Reflect the game state in the play area."""
         self.update_food()
         old_insects = self.insects[:]
         old_bees = self.bees[:]
         self.bees, self.insects = [], []
-        for name, place in gamestate.places.items():
+        for name, place in colony.places.items():
             if place.name == 'Hive':
                 continue
             pCol = self.get_place_column(name)
@@ -196,10 +196,9 @@ class GUI:
                         "img": self.get_insect_img_file(place.ant.name)
                         }
                 # Check if it's a container ant
-                if place.ant is not None:
-                    ant_container = isinstance(place.ant, ants.ContainerAnt)
-                    self.places[pRow][pCol]["insects"]["container"] = ant_container
-                    if ant_container and place.ant.contained_ant:
+                if hasattr(place.ant, "is_container"):
+                    self.places[pRow][pCol]["insects"]["container"] = place.ant.is_container
+                    if place.ant.is_container and place.ant.contained_ant:
                         self.places[pRow][pCol]["insects"]["contains"] = {
                                 "type": place.ant.contained_ant.name,
                                 "img": self.get_insect_img_file(place.ant.contained_ant.name)
@@ -218,15 +217,15 @@ class GUI:
         #Check to see if the ant is a remover. If so we need to remove the ant in pname
         pname, ant = data["pname"], data["ant"]
         if ant == "Remover":
-            existing_ant = self.gamestate.places[pname].ant
+            existing_ant = self.colony.places[pname].ant
             if existing_ant is not None:
-                print("gamestate.remove_ant('{0}')".format(pname))
-                self.gamestate.remove_ant(pname)
+                print("colony.remove_ant('{0}')".format(pname))
+                self.colony.remove_ant(pname)
             return
         insect = None
         try:
-            print("gamestate.deploy_ant('{0}', '{1}')".format(pname, ant))
-            insect = self.gamestate.deploy_ant(pname, ant);
+            print("colony.deploy_ant('{0}', '{1}')".format(pname, ant))
+            insect = self.colony.deploy_ant(pname, ant);
         except Exception as e:
             print(e)
             return { "error": str(e) }
@@ -236,7 +235,7 @@ class GUI:
         self.insects.append(id)
         self.insectToId[insect] = id
         self.currentInsectId += 1
-        self._update_control_panel(self.gamestate);
+        self._update_control_panel(self.colony);
         return { "success": 1, "id": id }
 
 import http.server
@@ -280,14 +279,22 @@ class HttpHandler(http.server.SimpleHTTPRequestHandler):
             response = json.dumps(response)
             self.wfile.write(response.encode('ascii'))
 
-def dead_insect(ant):
-    print('{0} ran out of armor and expired'.format(ant))
-    if ant in gui.insectToId:
-        gui.deadinsects.append(gui.insectToId[ant])
-        gui.saveState("deadinsects", gui.deadinsects)
-    elif ant in gui.beeToId:
-        gui.deadbees.append(gui.beeToId[ant])
-        gui.saveState("deadbees", gui.deadbees)
+def dead_insects(self, rv, *args):
+    if self.armor <= 0 and self:
+        print('{0} ran out of armor and expired'.format(self))
+        if self in gui.insectToId:
+            gui.deadinsects.append(gui.insectToId[self])
+            gui.saveState("deadinsects", gui.deadinsects)
+        elif self in gui.beeToId:
+            gui.deadbees.append(gui.beeToId[self])
+            gui.saveState("deadbees", gui.deadbees)
+def removed_ant(self, rv, *args):
+    r = gui.get_place_row(args[0])
+    c = gui.get_place_column(args[0])
+    if c in gui.places[r]:
+        if "id" in gui.places[r][c]["insects"]:
+            gui.deadinsects.append(gui.places[r][c]["insects"]["id"])
+            gui.saveState("deadinsects", gui.deadinsects)
 
 def update():
     request = urllib.request.Request("https://api.github.com/repos/colinschoen/Ants-Web-Viewer/releases/latest")
@@ -309,6 +316,7 @@ def update():
 
 def get_update(url, version):
     request = urllib.request.Request(url)
+    data = None
     print("Downloading new version...")
     try:
         response = urllib.request.urlopen(request)

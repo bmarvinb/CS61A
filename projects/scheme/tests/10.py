@@ -6,40 +6,70 @@ test = {
       'cases': [
         {
           'code': r"""
-          >>> formals = Pair('a', Pair('b', Pair('c', nil)))
-          >>> vals = Pair(1, Pair(2, Pair(3, nil)))
-          >>> frame = global_frame.make_child_frame(formals, vals)
-          >>> global_frame.lookup('a') # Type SchemeError if you think this errors
-          ec908af60f03727428c7ee3f22ec3cd8
-          # locked
-          >>> frame.lookup('a')        # Type SchemeError if you think this errors
-          eb892a26497f936d1f6cae54aacc5f51
-          # locked
-          >>> frame.lookup('b')        # Type SchemeError if you think this errors
-          2b7cdec3904f986982cbd24a0bc12887
-          # locked
-          >>> frame.lookup('c')        # Type SchemeError if you think this errors
-          3c7e8a3a2176a696c3a66418f78dff6b
-          # locked
+          scm> (define (f x y) (+ x y))
+          f
+          scm> f
+          (lambda (x y) (+ x y))
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
-          >>> frame = global_frame.make_child_frame(nil, nil)
-          >>> frame.parent is global_frame
-          b1796eff8a8e977439f97b5c6881a282
-          # locked
+          scm> (define (f) (+ 2 2))
+          f
+          scm> f
+          (lambda () (+ 2 2))
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
-          >>> first = Frame(global_frame)
-          >>> second = first.make_child_frame(nil, nil)
-          >>> second.parent is first
+          scm> (define (f x) (* x x))
+          f
+          scm> f
+          (lambda (x) (* x x))
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (foo x) 1 2 3 4 5)
+          foo
+          scm> foo
+          (lambda (x) 1 2 3 4 5)
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          scm> (define (foo) (/ 1 0))
+          foo
+          scm> foo
+          (lambda () (/ 1 0))
+          """,
+          'hidden': False,
+          'locked': False
+        }
+      ],
+      'scored': True,
+      'setup': '',
+      'teardown': '',
+      'type': 'scheme'
+    },
+    {
+      'cases': [
+        {
+          'code': r"""
+          >>> inp = read_line("(define (f x) x)")
+          >>> scheme_eval(inp, env)
+          'f'
+          >>> scheme_eval('f', env)
+          LambdaProcedure(Pair('x', nil), Pair('x', nil), <Global Frame>)
+          >>> inp == read_line("(define (f x) x)") # Don't mutate the input expression!
           True
           """,
           'hidden': False,
@@ -48,58 +78,9 @@ test = {
       ],
       'scored': True,
       'setup': r"""
+      >>> from scheme_reader import *
       >>> from scheme import *
-      >>> global_frame = create_global_frame()
-      """,
-      'teardown': '',
-      'type': 'doctest'
-    },
-    {
-      'cases': [
-        {
-          'code': r"""
-          >>> # More argument values than formal parameters
-          >>> global_frame.make_child_frame(Pair('a', nil), Pair(1, Pair(2, Pair(3, nil))))
-          SchemeError
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # More formal parameters than argument values
-          >>> global_frame.make_child_frame(Pair('a', Pair('b', Pair('c', nil))), Pair(1, nil))
-          SchemeError
-          """,
-          'hidden': False,
-          'locked': False
-        },
-        {
-          'code': r"""
-          >>> # Values can be pairs.
-          >>> formals = Pair('a', Pair('b', nil))
-          >>> values = Pair(Pair(1, nil), Pair(Pair(2, nil), nil))
-          >>> frame = global_frame.make_child_frame(formals, values)
-          >>> frame.lookup('a')
-          Pair(1, nil)
-          >>> frame.lookup('b')
-          Pair(2, nil)
-          >>> frame2 = frame.make_child_frame(nil, nil) # Bind parents correctly
-          >>> frame2.lookup('a')
-          Pair(1, nil)
-          >>> formals # Ensure that formals was not mutated
-          Pair('a', Pair('b', nil))
-          >>> values # Ensure that values was not mutated
-          Pair(Pair(1, nil), Pair(Pair(2, nil), nil))
-          """,
-          'hidden': False,
-          'locked': False
-        }
-      ],
-      'scored': True,
-      'setup': r"""
-      >>> from scheme import *
-      >>> global_frame = create_global_frame()
+      >>> env = create_global_frame()
       """,
       'teardown': '',
       'type': 'doctest'

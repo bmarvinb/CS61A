@@ -61,16 +61,16 @@ test = {
           >>> # deploying an Ant in the game simulation does
           >>> #
           >>> # Create a test layout where the colony is a single row with 9 tiles
-          >>> beehive = Hive(make_test_assault_plan())
-          >>> gamestate = GameState(None, beehive, ant_types(), dry_layout, (1, 9))
+          >>> hive = Hive(make_test_assault_plan())
+          >>> colony = AntColony(None, hive, ant_types(), dry_layout, (1, 9))
           >>> #
-          >>> gamestate.food = 4
+          >>> colony.food = 4
           >>> harvester = HarvesterAnt()
-          >>> harvester.action(gamestate)
-          >>> gamestate.food
+          >>> harvester.action(colony)
+          >>> colony.food
           5
-          >>> harvester.action(gamestate)
-          >>> gamestate.food
+          >>> harvester.action(colony)
+          >>> colony.food
           6
           """,
           'hidden': False,
@@ -80,25 +80,7 @@ test = {
       'scored': True,
       'setup': r"""
       >>> from ants import *
-      >>> from ants_plans import *
       """,
-      'teardown': '',
-      'type': 'doctest'
-    },
-    {
-      'cases': [
-        {
-          'code': r"""
-          >>> from ants import *
-          >>> HarvesterAnt.implemented
-          True
-          """,
-          'hidden': False,
-          'locked': False
-        }
-      ],
-      'scored': True,
-      'setup': '',
       'teardown': '',
       'type': 'doctest'
     }

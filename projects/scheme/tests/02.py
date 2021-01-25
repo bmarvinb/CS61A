@@ -1,101 +1,116 @@
 test = {
   'name': 'Problem 2',
-  'points': 1,
+  'points': 3,
   'suites': [
     {
       'cases': [
         {
           'code': r"""
-          >>> global_frame = create_global_frame()
-          >>> global_frame.define("x", 3)
-          >>> global_frame.parent is None
-          b1796eff8a8e977439f97b5c6881a282
-          # locked
-          >>> global_frame.lookup("x")
-          3c7e8a3a2176a696c3a66418f78dff6b
-          # locked
-          >>> global_frame.define("x", 2)
-          >>> global_frame.lookup("x")
-          2b7cdec3904f986982cbd24a0bc12887
-          # locked
-          >>> global_frame.lookup("foo")
-          ec908af60f03727428c7ee3f22ec3cd8
-          # locked
-          # choice: None
-          # choice: SchemeError
-          # choice: 3
-          """,
-          'hidden': False,
-          'locked': True
-        },
-        {
-          'code': r"""
-          >>> first_frame = create_global_frame()
-          >>> first_frame.define("x", 3)
-          >>> first_frame.define("y", False)
-          >>> second_frame = Frame(first_frame)
-          >>> second_frame.parent == first_frame
-          b1796eff8a8e977439f97b5c6881a282
-          # locked
-          >>> second_frame.lookup("x")
-          3c7e8a3a2176a696c3a66418f78dff6b
-          # locked
-          >>> second_frame.lookup("y")
-          96ae38315990d5fb27de4225d8b470ba
-          # locked
-          """,
-          'hidden': False,
-          'locked': True
-        },
-        {
-          'code': r"""
-          >>> first_frame = create_global_frame()
-          >>> first_frame.define("x", 3)
-          >>> second_frame = Frame(first_frame)
-          >>> third_frame = Frame(second_frame)
-          >>> fourth_frame = Frame(third_frame)
-          >>> fourth_frame.lookup("x")
+          >>> scheme_read(Buffer(tokenize_lines(['nil'])))
+          nil
+          >>> scheme_read(Buffer(tokenize_lines(['1'])))
+          1
+          >>> scheme_read(Buffer(tokenize_lines(['true'])))
+          True
+          >>> read_line('3')
           3
-          >>> second_frame.define("y", 1)
-          >>> fourth_frame.lookup("y")
-          1
-          >>> first_frame.define("y", 0)
-          >>> fourth_frame.lookup("y")
-          1
-          >>> fourth_frame.define("y", 2)
-          >>> fourth_frame.lookup("y")
-          2
+          >>> read_line('-123')
+          -123
+          >>> read_line('1.25')
+          1.25
+          >>> read_line('true')
+          True
+          >>> read_line('(a)')
+          Pair('a', nil)
+          >>> read_line(')')
+          SyntaxError
           """,
           'hidden': False,
           'locked': False
         },
         {
           'code': r"""
-          >>> first_frame = create_global_frame()
-          >>> first_frame.define("x", 1)
-          >>> second_frame = Frame(first_frame)
-          >>> third_frame = Frame(second_frame)
-          >>> fourth_frame = Frame(first_frame)
-          >>> fifth_frame = Frame(fourth_frame)
-          >>> fifth_frame.lookup("x")
+          >>> tokens = tokenize_lines(["(+ 1 ", "(23 4)) ("])
+          >>> src = Buffer(tokens)
+          >>> src.current()
+          '('
+          >>> src.remove_front()
+          '('
+          >>> src.current()
+          '+'
+          >>> src.remove_front()
+          '+'
+          >>> src.remove_front()
           1
-          >>> third_frame.lookup("x")
-          1
-          >>> second_frame.define("x", 2)
-          >>> third_frame.lookup("x")
-          2
-          >>> fifth_frame.lookup("x")
-          1
-          >>> fifth_frame.define("x", 5)
-          >>> fifth_frame.lookup("x")
-          5
-          >>> fourth_frame.lookup("x")
-          1
-          >>> first_frame.define("x", 4)
-          >>> fourth_frame.lookup("x")
-          4
-          >>> third_frame.lookup("x")
-          2
+          >>> scheme_read(src)  # Returns and removes the next complete expression in src
+          Pair(23, Pair(4, nil))
+          >>> src.current()
+          ')'
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> scheme_read(Buffer(tokenize_lines(['(18 6)'])))
+          Pair(18, Pair(6, nil))
+          >>> read_line('(18 6)')  # Shorter version of above!
+          Pair(18, Pair(6, nil))
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> read_tail(Buffer(tokenize_lines([')'])))
+          nil
+          >>> read_tail(Buffer(tokenize_lines(['1 2 3)'])))
+          Pair(1, Pair(2, Pair(3, nil)))
+          >>> read_tail(Buffer(tokenize_lines(['2 (3 4))'])))
+          Pair(2, Pair(Pair(3, Pair(4, nil)), nil))
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> read_tail(Buffer(tokenize_lines(['(1 2 3)'])))
+          SyntaxError
+          >>> read_line('((1 2 3)')
+          SyntaxError
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> src = Buffer(tokenize_lines(["(+ 1 2)"]))
+          >>> scheme_read(src)
+          Pair('+', Pair(1, Pair(2, nil)))
+          >>> src.current() # Don't forget to remove the closing parenthesis!
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> read_line("(+ (- 2 3) 1)")
+          Pair('+', Pair(Pair('-', Pair(2, Pair(3, nil))), Pair(1, nil)))
+          """,
+          'hidden': False,
+          'locked': False
+        },
+        {
+          'code': r"""
+          >>> read_line("()")
+          nil
+          >>> read_line("((a))")
+          Pair(Pair('a', nil), nil)
+          >>> read_line("(+ 1 (- 2 3) 8)")
+          Pair('+', Pair(1, Pair(Pair('-', Pair(2, Pair(3, nil))), Pair(8, nil))))
+          # choice: Pair('+', Pair(1, Pair('-', Pair(2, 3), Pair(8, nil))))
+          # choice: Pair('+', Pair(1, Pair(Pair('-', Pair(2, 3)), Pair(8, nil))))
+          # choice: Pair('+', Pair(1, Pair('-', Pair(2, Pair(3, nil)), Pair(8, nil))))
           """,
           'hidden': False,
           'locked': False
@@ -103,30 +118,10 @@ test = {
       ],
       'scored': True,
       'setup': r"""
-      >>> from scheme import *
+      >>> from scheme_reader import *
       """,
       'teardown': '',
       'type': 'doctest'
-    },
-    {
-      'cases': [
-        {
-          'code': r"""
-          scm> +
-          #[+]
-          scm> display
-          #[display]
-          scm> hello
-          SchemeError
-          """,
-          'hidden': False,
-          'locked': False
-        }
-      ],
-      'scored': True,
-      'setup': '',
-      'teardown': '',
-      'type': 'scheme'
     }
   ]
 }
