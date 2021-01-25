@@ -129,7 +129,6 @@ class Bee(Insect):
 
     name = 'Bee'
     damage = 1
-    food_cost = 5
 
     def sting(self, ant):
         """Attack an ANT, reducing its armor by 1."""
@@ -144,7 +143,7 @@ class Bee(Insect):
         """Return True if this Bee cannot advance to the next Place."""
         # Phase 4: Special handling for NinjaAnt
         # BEGIN Problem 7
-        return self.place.ant is not None
+        return False if not self.place.ant or self.place.ant.blocks_path == False else True
         # END Problem 7
 
     def action(self, colony):
@@ -168,9 +167,9 @@ class Ant(Insect):
     """An Ant occupies a place and does work for the colony."""
 
     is_ant = True
-    implemented = False  # Only implemented Ant classes should be instantiated
+    implemented = False
     food_cost = 0
-    # ADD CLASS ATTRIBUTES HERE
+    blocks_path = True
 
     def __init__(self, armor=1):
         """Create an Ant with an ARMOR quantity."""
@@ -309,6 +308,7 @@ class HungryAnt(Ant):
                 self.eat_bee(bee)
                 self.digesting = self.time_to_digest
 
+
 class WallAnt(Ant):
     name = 'Wall'
     food_cost = 4
@@ -317,6 +317,22 @@ class WallAnt(Ant):
 
     def __init__(self, armor=4):
         Ant.__init__(self, armor)
+
+
+class NinjaAnt(Ant):
+    """A NinjaAnt does not block the path of a Bee that flies by"""
+
+    name = 'Ninja'
+    food_cost = 5
+    damage = 1
+    implemented = True
+    blocks_path = False
+
+    def action(self, colony):
+        for bee in self.place.bees[:]:
+            bee.reduce_armor(self.damage)
+            if bee.armor > 0:
+                bee.place = self.place.exit
 
 
 class BodyguardAnt(Ant):

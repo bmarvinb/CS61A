@@ -25,7 +25,7 @@ test = {
             'A WallAnt attacks all the Bees in its place each turn'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': "What is a WallAnt's action?"
         },
         {
@@ -36,7 +36,7 @@ test = {
             'Ant subclasses do not inherit the action method from any class'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'Where do Ant subclasses inherit the action method from?'
         },
         {
@@ -48,7 +48,7 @@ test = {
             'Reduce the armor of all Bees in its place'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           If a subclass of Ant does not override the action method, what is the
           default action?
@@ -73,7 +73,7 @@ test = {
           4
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -98,7 +98,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,

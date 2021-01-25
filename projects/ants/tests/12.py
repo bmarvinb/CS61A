@@ -18,7 +18,7 @@ test = {
             'It throws water pellets instead of leaves'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': 'How is a ScubaThrower different from a regular ThrowerAnt?'
         },
         {
@@ -30,7 +30,7 @@ test = {
             'name, nearest_bee, is_watersafe'
           ],
           'hidden': False,
-          'locked': True,
+          'locked': False,
           'question': r"""
           Which inherited attributes and/or methods should ScubaThrower
           override?
@@ -52,7 +52,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': False,
@@ -76,7 +76,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -90,7 +90,7 @@ test = {
           0
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -106,7 +106,7 @@ test = {
           2
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -123,7 +123,7 @@ test = {
           2
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,
@@ -165,7 +165,7 @@ test = {
           2
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,
