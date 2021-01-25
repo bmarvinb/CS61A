@@ -19,7 +19,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -44,7 +44,7 @@ test = {
           'tunnel_0_1'
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -66,7 +66,7 @@ test = {
           'tunnel_0_5'
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -94,7 +94,7 @@ test = {
           'tunnel_0_1'
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -136,7 +136,7 @@ test = {
           'tunnel_0_6'
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -165,7 +165,7 @@ test = {
           'tunnel_0_2'
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -223,7 +223,7 @@ test = {
           'tunnel_0_2'
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,

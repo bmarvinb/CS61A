@@ -16,7 +16,7 @@ test = {
             'The insect goes for a swim.'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'What happens when an insect is added to a Water Place?'
         },
         {
@@ -28,7 +28,7 @@ test = {
             'instance, the is_watersafe attribute depends on the given place of an ant'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'What type of attribute should "is_watersafe" be?'
         },
         {
@@ -40,7 +40,7 @@ test = {
             'remove_ant, in the AntColony class'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': r"""
           What method deals damage to an Insect and removes it from its place
           if its armor reaches 0?
@@ -65,7 +65,7 @@ test = {
           ...             '{0} not removed from water'.format(test_ant)
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -80,7 +80,7 @@ test = {
           ...         '{0} not removed from water'.format(test_bee)
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -94,7 +94,7 @@ test = {
           ...         '{0} should not have been removed from place'.format(test_bee)
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,
@@ -128,7 +128,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -148,7 +148,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,

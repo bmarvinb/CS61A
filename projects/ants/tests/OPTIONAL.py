@@ -31,7 +31,7 @@ test = {
           1.2
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,

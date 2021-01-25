@@ -13,7 +13,7 @@ test = {
             'AntColony'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'What class does QueenAnt inherit from?'
         },
         {
@@ -25,7 +25,7 @@ test = {
             'All QueenAnt instances are true QueenAnts'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'Which QueenAnt instance is the true QueenAnt?'
         },
         {
@@ -37,7 +37,7 @@ test = {
             'It doubles the damage of all the ants behind it'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': r"""
           What happens to any QueenAnt instance that is instantiated after the
           first one?
@@ -64,7 +64,7 @@ test = {
             """
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'What does the true QueenAnt do each turn?'
         },
         {
@@ -76,7 +76,7 @@ test = {
             'If a Bee attacks the true QueenAnt'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'Under what circumstances do Bees win the game?'
         }
       ],
@@ -95,7 +95,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,
@@ -137,7 +137,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -155,7 +155,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -167,7 +167,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -207,7 +207,7 @@ test = {
           9
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,
@@ -243,7 +243,7 @@ test = {
           BeesWinException
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -259,7 +259,7 @@ test = {
           2
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -294,7 +294,7 @@ test = {
           0
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -357,7 +357,7 @@ test = {
           ...         "{0}'s damage is {1}, but should be {2}".format(ant, ant.damage, dmg * 2)
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -385,7 +385,7 @@ test = {
           >>> queen.action(colony)
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,

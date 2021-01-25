@@ -13,7 +13,7 @@ test = {
             'A TankAnt increases the damage of the ant it contains'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': r"""
           Besides costing more to deploy, what is the only difference between a
           TankAnt and a BodyguardAnt?
@@ -39,7 +39,7 @@ test = {
           2
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -54,7 +54,7 @@ test = {
           [2, 2, 2]
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -73,7 +73,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,
@@ -102,7 +102,7 @@ test = {
           0
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -151,7 +151,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -173,7 +173,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -183,7 +183,7 @@ test = {
           >>> tank.action(colony) # Action without contained ant should not error
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,

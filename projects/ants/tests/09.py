@@ -13,7 +13,7 @@ test = {
             'All the Ant instances in the colony'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'Which Ant does a BodyguardAnt guard?'
         },
         {
@@ -25,7 +25,7 @@ test = {
             'By allowing Bees to pass without attacking'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'How does a BodyguardAnt guard its ant?'
         },
         {
@@ -37,7 +37,7 @@ test = {
             "Nowhere, a BodyguardAnt has no knowledge of the ant that it's protecting"
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'Where is the ant contained by a BodyguardAnt stored?'
         },
         {
@@ -49,7 +49,7 @@ test = {
             'is_container is False for all Ants'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'What is the value of the container attribute for each Ant subclass?'
         },
         {
@@ -64,7 +64,7 @@ test = {
             'There can never be two Ant instances in the same place'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': 'When can a second be added to a place that already contains an Ant?'
         },
         {
@@ -76,7 +76,7 @@ test = {
             'Whichever Ant was placed there first'
           ],
           'hidden': False,
-          'locked': False,
+          'locked': True,
           'question': r"""
           If two Ants occupy the same Place, what is stored in that place's ant
           instance attribute?
@@ -98,7 +98,7 @@ test = {
           2
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,
@@ -116,7 +116,7 @@ test = {
           >>> bodyguard.action(colony) # Action without contained ant should not error
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -133,7 +133,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -150,7 +150,7 @@ test = {
           1
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -165,7 +165,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -183,7 +183,7 @@ test = {
           9001
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -195,7 +195,7 @@ test = {
           True
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -212,7 +212,7 @@ test = {
           AssertionError: Two ants in tunnel_0_0
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         },
         {
           'code': r"""
@@ -227,7 +227,7 @@ test = {
           AssertionError: Two ants in tunnel_0_0
           """,
           'hidden': False,
-          'locked': False
+          'locked': True
         }
       ],
       'scored': True,

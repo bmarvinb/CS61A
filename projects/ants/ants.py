@@ -129,8 +129,7 @@ class Bee(Insect):
 
     name = 'Bee'
     damage = 1
-    # OVERRIDE CLASS ATTRIBUTES HERE
-
+    food_cost = 5
 
     def sting(self, ant):
         """Attack an ANT, reducing its armor by 1."""
