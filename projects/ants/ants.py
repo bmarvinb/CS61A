@@ -1,12 +1,13 @@
 """CS 61A presents Ants Vs. SomeBees."""
 
 import random
-from ucb import main, interact, trace
+from ucb import main, interact
 from collections import OrderedDict
 
 ################
 # Core Classes #
 ################
+
 
 class Place(object):
     """A Place holds insects and has an exit to another Place."""
@@ -236,6 +237,7 @@ class ThrowerAnt(Ant):
         """Throw a leaf at the nearest Bee in range."""
         self.throw_at(self.nearest_bee(colony.hive))
 
+
 def random_or_none(s):
     """Return a random element of sequence S, or return None if S is empty."""
     if s:
@@ -244,6 +246,7 @@ def random_or_none(s):
 ##############
 # Extensions #
 ##############
+
 
 class ShortThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees at most 3 places away."""
@@ -345,6 +348,7 @@ class BodyguardAnt(Ant):
         "*** YOUR CODE HERE ***"
         # END Problem 9
 
+
 class TankAnt(BodyguardAnt):
     """TankAnt provides both offensive and defensive capabilities."""
 
@@ -360,6 +364,7 @@ class TankAnt(BodyguardAnt):
         "*** YOUR CODE HERE ***"
         # END Problem 10
 
+
 class Water(Place):
     """Water is a place that can only hold watersafe insects."""
 
@@ -373,6 +378,7 @@ class Water(Place):
 # BEGIN Problem 12
 # The ScubaThrower class
 # END Problem 12
+
 
 # BEGIN Problem 13
 class QueenAnt(Ant):  # You should change this line
@@ -431,6 +437,7 @@ def make_slow(action, bee):
     "*** YOUR CODE HERE ***"
     # END Problem EC
 
+
 def make_scare(action, bee):
     """Return a new action method that makes the bee go backwards.
 
@@ -439,6 +446,7 @@ def make_scare(action, bee):
     # BEGIN Problem EC
     "*** YOUR CODE HERE ***"
     # END Problem EC
+
 
 def apply_effect(effect, bee, duration):
     """Apply a status effect to a BEE that lasts for DURATION turns."""
@@ -515,6 +523,7 @@ class Wasp(Bee):
     name = 'Wasp'
     damage = 2
 
+
 class Hornet(Bee):
     """Class of bee that is capable of taking two actions per turn, although
     its overall damage output is lower. Immune to status effects.
@@ -531,6 +540,7 @@ class Hornet(Bee):
         if name != 'action':
             object.__setattr__(self, name, value)
 
+
 class NinjaBee(Bee):
     """A Bee that cannot be blocked. Is capable of moving past all defenses to
     assassinate the Queen.
@@ -539,6 +549,7 @@ class NinjaBee(Bee):
 
     def blocked(self):
         return False
+
 
 class Boss(Wasp, Hornet):
     """The leader of the bees. Combines the high damage of the Wasp along with
@@ -554,6 +565,7 @@ class Boss(Wasp, Hornet):
 
     def damage_modifier(self, amount):
         return amount * self.damage_cap/(self.damage_cap + amount)
+
 
 class Hive(Place):
     """The Place from which the Bees launch their assault.
@@ -684,6 +696,7 @@ class AntColony(object):
         status = ' (Food: {0}, Time: {1})'.format(self.food, self.time)
         return str([str(i) for i in self.ants + self.bees]) + status
 
+
 class QueenPlace(Place):
     """QueenPlace at the end of the tunnel, where the queen resides."""
 
@@ -800,6 +813,7 @@ def wet_layout(queen, register_place, tunnels=3, length=9, moat_frequency=3):
             else:
                 exit = Place('tunnel_{0}_{1}'.format(tunnel, step), exit)
             register_place(exit, step == length - 1)
+
 
 def dry_layout(queen, register_place, tunnels=3, length=9):
     """Register dry tunnels."""
