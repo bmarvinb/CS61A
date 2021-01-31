@@ -365,19 +365,16 @@ class BodyguardAnt(Ant):
 
 class TankAnt(BodyguardAnt):
     """TankAnt provides both offensive and defensive capabilities."""
-
     name = 'Tank'
     damage = 1
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 10
-    implemented = False   # Change to True to view in the GUI
-    # END Problem 10
+    implemented = True
+    food_cost = 6
 
     def action(self, colony):
-        # BEGIN Problem 10
-        "*** YOUR CODE HERE ***"
-        # END Problem 10
-
+        BodyguardAnt.action(self, colony)
+        bee_list = self.place.bees[:]
+        for bee in bee_list:
+            bee.reduce_armor(self.damage)
 
 class Water(Place):
     """Water is a place that can only hold watersafe insects."""
