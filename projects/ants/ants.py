@@ -42,9 +42,13 @@ class Place(object):
             if self.ant is None:
                 self.ant = insect
             else:
-                # BEGIN Problem 9
-                assert self.ant is None, 'Two ants in {0}'.format(self)
-                # END Problem 9
+                if self.ant.is_container == True and insect.is_container==False and self.ant.contained_ant is None:
+                    self.ant.contained_ant = insect
+                elif insect.is_container == True and self.ant.is_container == False and insect.contained_ant is None:
+                    insect.contained_ant = self.ant
+                    self.ant = insect
+                else:
+                    assert self.ant is None, 'Two ants in {0}'.format(self)
         else:
             self.bees.append(insect)
         insect.place = self
@@ -170,6 +174,7 @@ class Ant(Insect):
     implemented = False
     food_cost = 0
     blocks_path = True
+    is_container = False
 
     def __init__(self, armor=1):
         """Create an Ant with an ARMOR quantity."""
@@ -339,29 +344,23 @@ class BodyguardAnt(Ant):
     """BodyguardAnt provides protection to other Ants."""
 
     name = 'Bodyguard'
-    # OVERRIDE CLASS ATTRIBUTES HERE
-    # BEGIN Problem 9
-    implemented = False   # Change to True to view in the GUI
-    # END Problem 9
+    implemented = True
+    food_cost = 4
+    is_container = True
 
     def __init__(self, armor=2):
         Ant.__init__(self, armor)
         self.contained_ant = None  # The Ant hidden in this bodyguard
 
     def can_contain(self, other):
-        # BEGIN Problem 9
-        "*** YOUR CODE HERE ***"
-        # END Problem 9
+        return other.is_container == False or other.contained_ant is not None
 
     def contain_ant(self, ant):
-        # BEGIN Problem 9
-        "*** YOUR CODE HERE ***"
-        # END Problem 9
+        self.contained_ant = ant
 
     def action(self, colony):
-        # BEGIN Problem 9
-        "*** YOUR CODE HERE ***"
-        # END Problem 9
+        if self.contained_ant is not None:
+            self.contained_ant.action(colony)
 
 
 class TankAnt(BodyguardAnt):
