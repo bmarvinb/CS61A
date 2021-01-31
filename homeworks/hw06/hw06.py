@@ -13,7 +13,7 @@ def survey(p):
 
 # Object Oriented Programming
 
-class Fib():
+class Fib(object):
     """A Fibonacci number.
 
     >>> start = Fib()
@@ -34,12 +34,15 @@ class Fib():
     >>> start.next().next().next().next().next().next() # Ensure start isn't changed
     Fib object, value 8
     """
-
     def __init__(self, value=0):
         self.value = value
+        self.next_value = 1
 
     def next(self):
-        "*** YOUR CODE HERE ***"
+        b = Fib()
+        b.value = self.next_value
+        b.next_value = b.value + self.value
+        return b
 
     def __repr__(self):
         return "Fib object, value " + str(self.value)
@@ -81,4 +84,34 @@ class VendingMachine:
     >>> w.vend()
     'Here is your soda.'
     """
-    "*** YOUR CODE HERE ***"
+    def __init__(self, item, cost):
+        self.item = item
+        self.cost = cost
+        self.stock = 0
+        self.amount_deposited = 0
+
+    def restock(self, amount):
+        self.stock += amount
+        return 'Current {} stock: {}'.format(self.item, self.stock)
+
+    def deposit(self, amount):
+        if self.stock == 0:
+            return 'Machine is out of stock. Here is your ${}.'.format(amount)
+        self.amount_deposited += amount
+        return 'Current balance: ${}'.format(self.amount_deposited)
+
+    def vend(self):
+        if self.stock == 0:
+            return 'Machine is out of stock.'
+        elif self.amount_deposited < self.cost:
+            return 'You must deposit ${} more.'.format(self.cost - self.amount_deposited)
+        elif self.amount_deposited > self.cost:
+            balance = self.amount_deposited - self.cost
+            self.amount_deposited = 0
+            self.stock -= 1
+            return 'Here is your {} and ${} change.'.format(self.item, balance)
+        else:
+            self.amount_deposited = 0
+            self.stock -= 1
+            return 'Here is your {}.'.format(self.item)
+
