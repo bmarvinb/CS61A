@@ -1,5 +1,6 @@
 """ Lab 07: Recursive Objects """
 
+
 def link_to_list(link):
     """Takes a linked list and returns a Python list with the same elements.
 
@@ -9,7 +10,8 @@ def link_to_list(link):
     >>> link_to_list(Link.empty)
     []
     """
-    "*** YOUR CODE HERE ***"
+    return [] if link is Link.empty else [link.first] + link_to_list(link.rest)
+
 
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
@@ -22,7 +24,12 @@ def store_digits(n):
     >>> store_digits(876)
     Link(8, Link(7, Link(6)))
     """
-    "*** YOUR CODE HERE ***"
+    link = Link(n % 10)
+    while n >= 10:
+        n = n // 10
+        link = Link(n % 10, link)
+    return link
+
 
 def cumulative_sum(t):
     """Mutates t so that each node's label becomes the sum of all labels in
@@ -33,7 +40,15 @@ def cumulative_sum(t):
     >>> t
     Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
     """
-    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        t.label = t.label
+    else:
+        label_sum = 0
+        for b in t.branches:
+            cumulative_sum(b)
+            label_sum += b.label
+        t.label = label_sum + t.label
+
 
 # Linked List Class
 class Link:
@@ -76,6 +91,7 @@ class Link:
             string += str(self.first) + ' '
             self = self.rest
         return string + str(self.first) + '>'
+
 
 # Tree Class
 class Tree:
