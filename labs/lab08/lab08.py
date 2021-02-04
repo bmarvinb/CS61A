@@ -15,7 +15,11 @@ def deep_len(lnk):
     >>> deep_len(levels)
     5
     """
-    "*** YOUR CODE HERE ***"
+    if isinstance(lnk.first, int):
+        return 1 if not lnk.rest else 1 + deep_len(lnk.rest)
+    else:
+        return deep_len(lnk.first) + deep_len(lnk.rest)
+
 
 def make_to_string(front, mid, back, empty_repr):
     """ Returns a function that turns linked lists to strings.
@@ -32,7 +36,11 @@ def make_to_string(front, mid, back, empty_repr):
     >>> jerrys_to_string(Link.empty)
     '()'
     """
-    "*** YOUR CODE HERE ***"
+    def to_string(lst):
+        if lst is Link.empty:
+            return empty_repr
+        return front + str(lst.first) + mid + to_string(lst.rest) + back
+    return to_string
 
 # Trees
 def tree_map(fn, t):
