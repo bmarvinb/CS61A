@@ -420,5 +420,3 @@ class Link:
         return string + str(self.first) + '>'
 
 
-numbers = Tree(1,[Tree(2,[Tree(3),Tree(4)]),Tree(5,[Tree(6,[Tree(7)]),Tree(8)])])
-print(tree_map(lambda x: 2**x, numbers))
