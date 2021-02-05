@@ -19,9 +19,8 @@
 ; expect 0
 
 (define (filter-lst f lst)
-  (cond ((null? lst) '())
-        ((f (car lst)) (cons (car lst) (filter f (cdr lst))))
-        (else (filter f (cdr lst)))))
+  'YOUR-CODE-HERE
+)
 
 ;;; Tests
 (define (even? x)
@@ -30,7 +29,8 @@
 ; expect (0 2 8)
 
 (define (make-adder num)
-  (lambda (x) (+ x num)))
+  'YOUR-CODE-HERE
+)
 
 ;;; Tests
 (define adder (make-adder 5))
