@@ -147,9 +147,14 @@ class BuiltinProcedure(Procedure):
         while args is not nil:
             python_args.append(args.first)
             args = args.second
-        # BEGIN PROBLEM 4
-        "*** YOUR CODE HERE ***"
-        # END PROBLEM 4
+
+        if self.use_env:
+            python_args.append(env)
+
+        try:
+            return self.fn(*python_args)
+        except TypeError as error:
+            raise SchemeError(error)
 
 
 class LambdaProcedure(Procedure):
