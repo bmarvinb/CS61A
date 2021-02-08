@@ -32,9 +32,12 @@ def scheme_eval(expr, env, _=None):  # Optional third argument is ignored
     if scheme_symbolp(first) and first in SPECIAL_FORMS:
         return SPECIAL_FORMS[first](rest, env)
     else:
-        # BEGIN PROBLEM 5
-        "*** YOUR CODE HERE ***"
-        # END PROBLEM 5
+        operator = scheme_eval(first, env)
+        check_procedure(operator)
+        if isinstance(operator, MacroProcedure):
+            return scheme_eval(operator.apply_macro(rest, env), env)
+        operands = rest.map(lambda x: scheme_eval(x, env))
+        return scheme_apply(operator, operands, env)
 
 
 def self_evaluating(expr):
