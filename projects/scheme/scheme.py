@@ -233,9 +233,7 @@ def do_quote_form(expressions, env):
     """Evaluate a quote form."""
     check_form(expressions, 1, 1)
     # BEGIN PROBLEM 7
-    if isinstance(expressions, Pair):
-        return expressions.first
-    return expressions
+    return expressions.first
     # END PROBLEM 7
 
 
