@@ -10,8 +10,10 @@ if sys.version_info[0] < 3:  # Python 2 compatibility
         sys.stderr.write(prompt)
         sys.stderr.flush()
         line = sys.stdin.readline()
-        if not line: raise EOFError()
+        if not line:
+            raise EOFError()
         return line.rstrip('\r\n')
+
 
 class Buffer(object):
     """A Buffer provides a way of accessing a sequence of tokens across lines.
@@ -58,6 +60,7 @@ class Buffer(object):
     3: 12 ) >>
     >>> buf.remove_front()  # returns None
     """
+
     def __init__(self, source):
         self.index = 0
         self.lines = []
@@ -104,14 +107,17 @@ class Buffer(object):
         s += ' '.join(map(str, self.current_line[self.index:]))
         return s.strip()
 
+
 # Try to import readline for interactive history
 try:
     import readline
 except:
     pass
 
+
 class InputReader(object):
     """An InputReader is an iterable that prompts the user for input."""
+
     def __init__(self, prompt):
         self.prompt = prompt
 
@@ -120,8 +126,10 @@ class InputReader(object):
             yield input(self.prompt)
             self.prompt = ' ' * len(self.prompt)
 
+
 class LineReader(object):
     """A LineReader is an iterable that prints lines after a prompt."""
+
     def __init__(self, lines, prompt, comment=";"):
         self.lines = lines
         self.prompt = prompt
@@ -131,7 +139,7 @@ class LineReader(object):
         while self.lines:
             line = self.lines.pop(0).strip('\n')
             if (self.prompt is not None and line != "" and
-                not line.lstrip().startswith(self.comment)):
+                    not line.lstrip().startswith(self.comment)):
                 print(self.prompt + line)
                 self.prompt = ' ' * len(self.prompt)
             yield line

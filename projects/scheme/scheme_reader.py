@@ -220,3 +220,6 @@ def read_print_loop():
 def main(*args):
     if len(args) and '--repl' in args:
         read_print_loop()
+
+
+scheme_read(Buffer(tokenize_lines(['(+ 1 2)'])))
