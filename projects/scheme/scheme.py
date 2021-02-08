@@ -232,9 +232,7 @@ def do_define_form(expressions, env):
 def do_quote_form(expressions, env):
     """Evaluate a quote form."""
     check_form(expressions, 1, 1)
-    # BEGIN PROBLEM 7
     return expressions.first
-    # END PROBLEM 7
 
 
 def do_begin_form(expressions, env):
