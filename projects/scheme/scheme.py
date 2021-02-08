@@ -218,9 +218,8 @@ def do_define_form(expressions, env):
     target = expressions.first
     if scheme_symbolp(target):
         check_form(expressions, 2, 2)
-        # BEGIN PROBLEM 6
-        "*** YOUR CODE HERE ***"
-        # END PROBLEM 6
+        env.define(target, scheme_eval(expressions.second.first, env))
+        return target
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 10
         "*** YOUR CODE HERE ***"
