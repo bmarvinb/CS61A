@@ -28,7 +28,6 @@ _SINGLE_CHAR_TOKENS = set("()[]'`")
 _TOKEN_END = _WHITESPACE | _SINGLE_CHAR_TOKENS | _STRING_DELIMS | {',', ',@'}
 DELIMITERS = _SINGLE_CHAR_TOKENS | {'.', ',', ',@'}
 
-
 def valid_symbol(s):
     """Returns whether s is a well-formed symbol."""
     if len(s) == 0:
@@ -37,7 +36,6 @@ def valid_symbol(s):
         if c not in _SYMBOL_CHARS:
             return False
     return True
-
 
 def next_candidate_token(line, k):
     """A tuple (tok, k'), where tok is the next substring of line at or
@@ -51,24 +49,21 @@ def next_candidate_token(line, k):
         elif c in _WHITESPACE:
             k += 1
         elif c in _SINGLE_CHAR_TOKENS:
-            if c == ']':
-                c = ')'
-            if c == '[':
-                c = '('
+            if c == ']': c = ')'
+            if c == '[': c = '('
             return c, k+1
         elif c == '#':  # Boolean values #t and #f
             return line[k:k+2], min(k+2, len(line))
-        elif c == ',':  # Unquote; check for @
+        elif c == ',': # Unquote; check for @
             if k+1 < len(line) and line[k+1] == '@':
                 return ',@', k+2
             return c, k+1
         elif c in _STRING_DELIMS:
-            # No triple quotes in Scheme
-            if k+1 < len(line) and line[k+1] == c:
+            if k+1 < len(line) and line[k+1] == c: # No triple quotes in Scheme
                 return c+c, k+2
             line_bytes = (bytes(line[k:], encoding='utf-8'),)
             gen = tokenize.tokenize(iter(line_bytes).__next__)
-            next(gen)  # Throw away encoding token
+            next(gen) # Throw away encoding token
             token = next(gen)
             if token.type != tokenize.STRING:
                 raise ValueError("invalid string: {0}".format(token.string))
@@ -79,7 +74,6 @@ def next_candidate_token(line, k):
                 j += 1
             return line[k:j], min(j, len(line))
     return None, len(line)
-
 
 def tokenize_line(line):
     """The list of Scheme tokens on line.  Excludes comments and whitespace."""
@@ -110,8 +104,7 @@ def tokenize_line(line):
                 if valid_symbol(text):
                     result.append(text.lower())
                 else:
-                    raise ValueError(
-                        "invalid numeral or symbol: {0}".format(text))
+                    raise ValueError("invalid numeral or symbol: {0}".format(text))
         elif text[0] in _STRING_DELIMS:
             result.append(text)
         else:
@@ -121,17 +114,14 @@ def tokenize_line(line):
         text, i = next_candidate_token(line, i)
     return result
 
-
 def tokenize_lines(input):
     """An iterator over lists of tokens, one for each line of the iterable
     input sequence."""
     return (tokenize_line(line) for line in input)
 
-
 def count_tokens(input):
     """Count the number of non-delimiter tokens in input."""
     return len(list(itertools.chain(*tokenize_lines(input))))
-
 
 @main
 def run(*args):

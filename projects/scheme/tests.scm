@@ -10,11 +10,7 @@
 ;;; *** Add your own tests here! ***
 ;;; ********************************
 ; BEGIN PROBLEM 0
-(+ 1 2)
-; expect 3
-
-(/ 1 0)
-; expect Error
+'replace-this-line
 ; END PROBLEM 0
 
 ;;; These are examples from several sections of "The Structure
