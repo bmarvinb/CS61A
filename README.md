@@ -1,7 +1,6 @@
 # CS61A
-The Structure and Interpretation of Computer Programs
-
 <img src="logo.png">
+The Structure and Interpretation of Computer Programs
 
 ## Links
 1. [Textbook](https://composingprograms.com/)
