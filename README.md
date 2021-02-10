@@ -1,4 +1,3 @@
-# CS61A
 <img src="logo.png">
 The Structure and Interpretation of Computer Programs
 
