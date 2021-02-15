@@ -1,5 +1,4 @@
 # The Structure and Interpretation of Computer Programs
-<img src="logo.png">
 
 ## Links
 1. [Textbook](https://composingprograms.com/)
